@@ -1,0 +1,117 @@
+body {
+  font-family: 'Inter', 'Noto Sans JP', sans-serif;
+  margin: 0;
+  background: #fafbfc;
+  color: #222;
+  line-height: 1.6;
+}
+
+nav {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  background: #2B3A67;
+  padding: 0.8rem 1.5rem;
+  position: sticky;
+  top: 0;
+  z-index: 100;
+}
+
+.logo {
+  color: #fff;
+  font-weight: 600;
+  font-size: 1.1rem;
+}
+
+.nav-links {
+  list-style: none;
+  display: flex;
+  gap: 1rem;
+}
+
+.nav-links a {
+  color: #E6E8F0;
+  text-decoration: none;
+  transition: 0.2s;
+}
+
+.nav-links a:hover {
+  color: #FFB800;
+}
+
+#lang-toggle {
+  background: #FFB800;
+  border: none;
+  padding: 0.4rem 0.8rem;
+  border-radius: 4px;
+  cursor: pointer;
+  font-weight: 600;
+}
+
+.hero {
+  text-align: center;
+  padding: 6rem 1rem 4rem;
+  background: linear-gradient(180deg, #ffffff, #f0f2f8);
+}
+
+.highlight {
+  color: #2B3A67;
+}
+
+.btn {
+  background: #2B3A67;
+  color: #fff;
+  padding: 0.6rem 1.2rem;
+  border-radius: 4px;
+  text-decoration: none;
+  font-weight: 500;
+  margin-right: 0.6rem;
+}
+
+.btn-outline {
+  border: 2px solid #2B3A67;
+  background: transparent;
+  color: #2B3A67;
+}
+
+section {
+  padding: 3rem 1rem;
+  max-width: 800px;
+  margin: auto;
+}
+
+h2 {
+  border-left: 5px solid #2B3A67;
+  padding-left: 0.5rem;
+}
+
+.card {
+  background: #fff;
+  border-radius: 8px;
+  padding: 1rem;
+  margin: 1rem 0;
+  box-shadow: 0 1px 4px rgba(0,0,0,0.1);
+}
+
+.skills-list li {
+  margin: 0.5rem 0;
+}
+
+footer {
+  text-align: center;
+  padding: 1rem;
+  background: #2B3A67;
+  color: #E6E8F0;
+  font-size: 0.9rem;
+}
+
+/* === Japanese Mode === */
+.jp * {
+  font-family: 'Noto Sans JP', sans-serif;
+}
+.jp #about h2::after {
+  content: "（自己紹介）";
+  color: #555;
+  font-weight: 400;
+  font-size: 0.9rem;
+}

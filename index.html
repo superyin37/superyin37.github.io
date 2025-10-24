@@ -1,0 +1,234 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Yin Hanyang | Personal Homepage</title>
+  <link rel="stylesheet" href="style.css" />
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600&family=Noto+Sans+JP:wght@400;600&display=swap" rel="stylesheet">
+  <style>
+    .lang { display: none; }
+    .lang.active { display: block; }
+    #lang-toggle {
+      background: #FFB800;
+      border: none;
+      padding: 0.4rem 0.8rem;
+      border-radius: 4px;
+      cursor: pointer;
+      font-weight: 600;
+      margin-left: 1rem;
+    }
+  </style>
+</head>
+<body>
+
+  <!-- ===== NAVIGATION BAR ===== -->
+  <nav>
+    <div class="logo">Yin Hanyang</div>
+    <ul class="nav-links">
+      <li><a href="#home">Home</a></li>
+      <li><a href="#about">About</a></li>
+      <li><a href="#research">Research</a></li>
+      <li><a href="#projects">Projects</a></li>
+      <li><a href="#skills">Skills</a></li>
+      <li><a href="#cv">CV</a></li>
+      <li><a href="#contact">Contact</a></li>
+    </ul>
+    <button id="lang-toggle">日本語</button>
+  </nav>
+
+  <!-- ===== ENGLISH VERSION ===== -->
+  <div id="lang-en" class="lang active">
+
+    <section id="home" class="hero">
+      <h1><span class="highlight">Yin Hanyang</span></h1>
+      <p>Master’s Student</p>
+      <p>Department of General Systems Studies,<br>
+         Graduate School of Arts and Sciences,<br>
+         The University of Tokyo
+      </p>
+    </section>
+
+    <section id="about">
+      <h2>About</h2>
+      <p>
+        I am a master's student at the University of Tokyo, specializing in causal discovery and machine learning.  
+        I have a broad interest in machine learning and data science, and have been involved in several projects and internships related to these fields.  
+        My experience covers anomaly detection, retrieval-augmented generation (RAG), LLM-based chatbots, LLM fine-tuning, and causal inference.
+      </p>
+    </section>
+
+    <section id="research">
+      <h2>Research</h2>
+      <div class="card">
+        <h3>Hyperparameter Selection for Causal Discovery Algorithms Using Continuous Optimization</h3>
+        <p>Undergraduate Thesis</p>
+      </div>
+      <div class="card">
+        <h3>Development of Causal Discovery Algorithms Based on Continuous Optimization</h3>
+        <p>Current Research Topic</p>
+        <a href="#">[Research Page]</a>
+      </div>
+    </section>
+
+    <section id="projects">
+      <h2>Projects</h2>
+      <div class="card"><h3>Fraud Transaction Detection Model Development (Apr 2025 – Aug 2025)</h3></div>
+      <div class="card"><h3>Kitakyushu City Garbage Classification Chatbot (Sep 2025)</h3></div>
+      <div class="card"><h3>Kaggle MDC – Silver Medal (Team) (Sep 2025)</h3></div>
+      <div class="card"><h3>Kaggle MAP – Silver Medal (Solo) (Oct 2025)</h3></div>
+      <div class="card"><h3>Energy and CO₂ Emission Forecasting via Causal Discovery (Oct 2025 – )</h3></div>
+    </section>
+
+    <section id="skills">
+      <h2>Skills</h2>
+
+      <h3>Programming Languages</h3>
+      <ul class="skills-list">
+        <li>Python (Primary)</li>
+        <li>Java</li>
+        <li>C</li>
+      </ul>
+
+      <h3>Languages</h3>
+      <ul class="skills-list">
+        <li>Japanese (JLPT N1)</li>
+        <li>English (TOEFL 98 / TOEIC 850)</li>
+        <li>Chinese (Native)</li>
+      </ul>
+
+      <h3>Others</h3>
+      <ul class="skills-list">
+        <li>Kaggle Silver Medal ×2 (Sep 2025, Oct 2025)</li>
+        <li>Academic Excellence Award, Department of Mathematics, Meiji University (Mar 2025)</li>
+      </ul>
+    </section>
+
+    <section id="cv">
+      <h2>CV</h2>
+      <p><strong>Meiji University</strong> — B.Sc. in Mathematics (Apr 2021 – Mar 2025)</p>
+      <p><strong>The University of Tokyo</strong> — M.A. in General Systems Studies (Apr 2025 – Present)</p>
+      <p><strong>GMO Internet</strong> — Technology Intern (AI Engineer) (Sep 1–5, 2025)</p>
+      <p><strong>Fujitsu</strong> — Data Scientist Intern (Sep 2025 – Present)</p>
+      <a href="cv.pdf" class="btn">Download Full CV</a>
+    </section>
+
+    <section id="contact">
+      <h2>Contact</h2>
+      <p>✉️ Email: <a href="mailto:superxiaoyin@gmail.com">superxiaoyin@gmail.com</a></p>
+      <p>🐙 GitHub: <a href="https://github.com/superyin37">superyin37</a></p>
+    </section>
+
+  </div>
+
+  <!-- ===== JAPANESE VERSION ===== -->
+  <div id="lang-jp" class="lang">
+
+    <section id="home" class="hero">
+      <h1><span class="highlight">殷 晗陽（イン　ハンヨウ）</span></h1>
+      <p>東京大学 大学院 総合文化研究科 広域科学専攻<br>
+         広域システム科学系 修士課程在学中
+      </p>
+    </section>
+
+    <section id="about">
+      <h2>自己紹介</h2>
+      <p>
+	殷 晗陽（イン　ハンヨウ）と申します。  
+	中国・上海出身で、現在は東京大学大学院 総合文化研究科 広域科学専攻 修士1年の学生です。  
+        東京大学大学院で因果探索（causal discovery）および機械学習を研究しています。  
+        機械学習やデータサイエンスに幅広い関心を持ち、これまでに複数のプロジェクトやインターンシップに携わってきました。  
+        主な経験領域は、異常検知、RAG（Retrieval-Augmented Generation）、LLMチャットボット、LLMファインチューニング、因果推論などです。
+      </p>
+    </section>
+
+    <section id="research">
+      <h2>研究</h2>
+      <div class="card">
+        <h3>連続最適化を用いた因果探索アルゴリズムのハイパーパラメータ選択</h3>
+        <p>学士論文</p>
+      </div>
+      <div class="card">
+        <h3>連続最適化に基づく因果探索アルゴリズムの開発</h3>
+        <p>現在の研究テーマ</p>
+        <a href="#">[研究紹介ページ]</a>
+      </div>
+    </section>
+
+    <section id="projects">
+      <h2>プロジェクト</h2>
+      <div class="card"><h3>不正取引検知モデルの開発（2025年4月〜8月）</h3></div>
+      <div class="card"><h3>北九州市ごみ分別チャットボットの開発（2025年9月）</h3></div>
+      <div class="card"><h3>Kaggle MDC 銀メダル（チーム）（2025年9月）</h3></div>
+      <div class="card"><h3>Kaggle MAP 銀メダル（ソロ）（2025年10月）</h3></div>
+      <div class="card"><h3>因果探索に基づくエネルギー・CO₂排出量予測（2025年10月〜）</h3></div>
+    </section>
+
+    <section id="skills">
+      <h2>スキル</h2>
+
+      <h3>プログラミング言語</h3>
+      <ul class="skills-list">
+        <li>Python（主）</li>
+        <li>Java</li>
+        <li>C</li>
+      </ul>
+
+      <h3>言語</h3>
+      <ul class="skills-list">
+        <li>日本語（JLPT N1）</li>
+        <li>英語（TOEFL 98 / TOEIC 850）</li>
+        <li>中国語（母語）</li>
+      </ul>
+
+      <h3>その他</h3>
+      <ul class="skills-list">
+        <li>Kaggle 銀メダル ×2（2025年9月、2025年10月）</li>
+        <li>明治大学理工学部数学科 優秀成績賞（2025年3月）</li>
+      </ul>
+    </section>
+
+    <section id="cv">
+      <h2>経歴</h2>
+      <p><strong>明治大学 理工学部 数学科</strong> — 卒業（2021年4月〜2025年3月）</p>
+      <p><strong>東京大学 大学院 総合文化研究科 広域科学専攻</strong> — 修士課程在学中（2025年4月〜）</p>
+      <p><strong>GMOインターネット株式会社</strong> — テクノロジーインターン（AIエンジニア）（2025年9月1日〜5日）</p>
+      <p><strong>富士通株式会社</strong> — データサイエンティストインターン（2025年9月〜）</p>
+      <a href="cv.pdf" class="btn">CVをダウンロード</a>
+    </section>
+
+    <section id="contact">
+      <h2>連絡先</h2>
+      <p>✉️ Email: <a href="mailto:superxiaoyin@gmail.com">superxiaoyin@gmail.com</a></p>
+      <p>🐙 GitHub: <a href="https://github.com/superyin37">superyin37</a></p>
+    </section>
+
+  </div>
+
+  <footer>
+    <p>© 2025 Yin Hanyang | Last updated October 2025</p>
+  </footer>
+
+  <!-- ===== LANGUAGE SWITCH SCRIPT ===== -->
+  <script>
+    const toggleBtn = document.getElementById('lang-toggle');
+    const en = document.getElementById('lang-en');
+    const jp = document.getElementById('lang-jp');
+    let isJP = false;
+
+    toggleBtn.addEventListener('click', () => {
+      isJP = !isJP;
+      if (isJP) {
+        en.classList.remove('active');
+        jp.classList.add('active');
+        toggleBtn.textContent = 'EN';
+      } else {
+        jp.classList.remove('active');
+        en.classList.add('active');
+        toggleBtn.textContent = '日本語';
+      }
+    });
+  </script>
+
+</body>
+</html>
