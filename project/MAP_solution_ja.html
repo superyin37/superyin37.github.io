@@ -3,182 +3,296 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>Kaggle MAP Final Solution- 銀メダル | 殷 晗陽</title>
+  <title>Kaggle MAP | 殷 晗陽</title>
   <link rel="stylesheet" href="../style.css" />
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600&family=Noto+Sans+JP:wght@400;600&display=swap" rel="stylesheet">
+  <style>
+    .lang { display:none; }
+    .lang.active { display:block; }
+    #lang-toggle {
+      background:#FFB800; border:none; padding:0.4rem 0.8rem;
+      border-radius:4px; cursor:pointer; font-weight:600;
+      position:fixed; top:1rem; right:1rem; z-index:200;
+    }
+    pre, code { background:#f6f6f6; padding:0.4rem; border-radius:4px; display:block; overflow-x:auto;}
+    table {border-collapse:collapse; width:100%; margin:1rem 0;}
+    th,td {border:1px solid #ddd; padding:0.5rem; text-align:left;}
+    th {background:#f0f0f0;}
+  </style>
 </head>
 <body>
 
-  <nav>
-    <div class="logo"><a href="../index.html" style="color:white;text-decoration:none;">← Back to Home</a></div>
-  </nav>
+  <button id="lang-toggle">English</button>
 
-  <section class="hero">
-    <h1>Charting Student Math Misunderstandings (MAP)</h1>
-    <p>🥈 銀メダル（上位5%）</p>
-    <p>Public LB: 0.945  Private LB: 0.946</p>
-    <p><a href="https://www.kaggle.com/competitions/map-charting-student-math-misunderstandings" target="_blank">[コンペページ]</a></p>
-  </section>
+  <!-- ===== Japanese Version ===== -->
+  <div id="lang-jp" class="lang active">
 
-  <section>
-    <h2>一、タスク概要</h2>
-    <p>
-      本コンペの目的は、学生が数学の選択式問題に回答する際に示す
-      <strong>誤答タイプ（Category:Misconception）</strong>を予測することである。
-    </p>
-    <ul>
-      <li>問題文（QuestionText）</li>
-      <li>学生が選択した解答（MC_Answer）</li>
-      <li>学生による説明文（StudentExplanation）</li>
-    </ul>
-    <p>出力は65種類の「Category:Misconception」ラベルのいずれかである。</p>
-    <p>主な難点：</p>
-    <ul>
-      <li>テストセットには訓練データに含まれないルール（unseen rules）が存在する。</li>
-      <li>学生の説明文の表現が多様で、意味の微妙な差異が大きい。</li>
-      <li>ラベル分布が極めて不均衡である。</li>
-    </ul>
-  </section>
+    <nav>
+      <div class="logo"><a href="../index.html" style="color:white;text-decoration:none;">← Back to Home</a></div>
+    </nav>
 
-  <section>
-    <h2>二、全体的なアプローチ</h2>
-    <p>
-      本ソリューションでは、<strong>複数の大規模モデルに対する LoRA 微調整 + 加重アンサンブル（Ensemble）</strong>の戦略を採用した。
-      異なるアーキテクチャの指示微調整モデルを組み合わせ、言語・論理・数学的意味の補完性を最大限に活用した。
-    </p>
+    <section class="hero">
+      <h1>Charting Student Math Misunderstandings (MAP)</h1>
+      <p>🥈 銀メダル（上位5%）</p>
+      <p>Public LB: 0.945  Private LB: 0.946</p>
+      <p><a href="https://www.kaggle.com/competitions/map-charting-student-math-misunderstandings" target="_blank">[コンペページ]</a></p>
+    </section>
 
-    <table>
-      <tr><th>モデル</th><th>パラメータ規模</th><th>学習方式</th><th>特徴</th></tr>
-      <tr><td>Gemma2-9B-IT</td><td>9B</td><td>LoRA-CV945</td><td>英語理解力と意味的ロバスト性が高い</td></tr>
-      <tr><td>Qwen3-8B</td><td>8B</td><td>LoRA-MAP</td><td>多言語適応能力に優れる</td></tr>
-      <tr><td>DeepSeek-Math-7B</td><td>7B</td><td>LoRA-MAP</td><td>数学的推論能力が強い</td></tr>
-      <tr><td>Hunyuan-7B-Instruct</td><td>7B</td><td>LoRA-MAP</td><td>指示一般化と安定性に優れる</td></tr>
-    </table>
-  </section>
+    <section>
+      <h2>一、タスク概要</h2>
+      <p>本コンペの目的は、学生が数学の選択式問題に回答する際に示す
+      <strong>誤答タイプ（Category:Misconception）</strong>を予測することである。</p>
+      <ul>
+        <li>問題文（QuestionText）</li>
+        <li>学生が選択した解答（MC_Answer）</li>
+        <li>学生による説明文（StudentExplanation）</li>
+      </ul>
+      <p>出力は65種類の「Category:Misconception」ラベルのいずれか。</p>
+      <ul>
+        <li>テストセットに含まれないルール（unseen rules）の存在</li>
+        <li>学生説明文の表現が多様で意味の差異が大きい</li>
+        <li>ラベル分布が不均衡</li>
+      </ul>
+    </section>
 
-  <section>
-    <h2>三、データ前処理</h2>
+    <section>
+      <h2>二、全体的なアプローチ</h2>
+      <p><strong>複数LLMのLoRA微調整＋加重アンサンブル</strong>戦略を採用。
+      4つの指示微調整モデルを組み合わせ、言語・論理・数学的補完性を活用した。</p>
+      <table>
+        <tr><th>モデル</th><th>パラメータ規模</th><th>学習方式</th><th>特徴</th></tr>
+        <tr><td>Gemma2-9B-IT</td><td>9B</td><td>LoRA-CV945</td><td>英語理解と意味的ロバスト性</td></tr>
+        <tr><td>Qwen3-8B</td><td>8B</td><td>LoRA-MAP</td><td>多言語適応性</td></tr>
+        <tr><td>DeepSeek-Math-7B</td><td>7B</td><td>LoRA-MAP</td><td>数学的推論力</td></tr>
+        <tr><td>Hunyuan-7B-Instruct</td><td>7B</td><td>LoRA-MAP</td><td>指示一般化と安定性</td></tr>
+      </table>
+    </section>
 
-    <h3>ラベル構築</h3>
-    <pre><code>train["target"] = train["Category"] + ":" + train["Misconception"]
+    <section>
+      <h2>三、データ前処理</h2>
+      <h3>ラベル構築</h3>
+<pre><code>train["target"] = train["Category"] + ":" + train["Misconception"]
 train["label"] = LabelEncoder().fit_transform(train["target"])
 </code></pre>
-    <p>ユニークなカテゴリは全65種類。</p>
-
-    <h3>正答特徴の抽出</h3>
-    <pre><code>idx = train.apply(lambda row: row.Category.split("_")[0], axis=1) == "True"
+      <h3>正答特徴抽出</h3>
+<pre><code>idx = train.apply(lambda row: row.Category.split("_")[0], axis=1) == "True"
 correct = train.loc[idx].groupby(["QuestionId","MC_Answer"]).head(1)
 </code></pre>
-    <p>これにより、追加入力特徴として <code>is_correct</code> を生成。</p>
-
-    <h3>入力テンプレートの統一</h3>
-    <pre><code>Question: {QuestionText}
+      <h3>入力テンプレート</h3>
+<pre><code>Question: {QuestionText}
 Answer: {MC_Answer}
 Correct? {Yes/No}
 Student Explanation: {StudentExplanation}
 </code></pre>
-    <p>
-      この形式によって、モデルは単なる表層一致ではなく、指示微調整モデルとしての推論能力を発揮できるようにした。
-    </p>
-  </section>
+    </section>
 
-  <section>
-    <h2>四、ファインチューニング（LoRA）</h2>
-    <p>
-      各モデルはベースモデルを基に <strong>LoRA（Low-Rank Adaptation）</strong> により微調整を実施し、
-      限られたGPUメモリで効率的に学習を行った。
-    </p>
-    <table>
-      <tr><th>モデル</th><th>LoRA Rank</th><th>学習率</th><th>バッチサイズ</th><th>CV</th><th>説明</th></tr>
-      <tr><td>Gemma2-9B-IT</td><td>16</td><td>2e-4</td><td>8</td><td>0.945</td><td>メインモデル</td></tr>
-      <tr><td>Qwen3-8B</td><td>16</td><td>2e-4</td><td>8</td><td>0.944</td><td>意味的カバレッジが広い</td></tr>
-      <tr><td>DeepSeek-Math-7B</td><td>16</td><td>2e-4</td><td>8</td><td>0.944</td><td>数学的論理性が強い</td></tr>
-      <tr><td>Hunyuan-7B</td><td>16</td><td>2e-4</td><td>8</td><td>0.943</td><td>汎化と安定性に優れる</td></tr>
-    </table>
-  </section>
+    <section>
+      <h2>四、ファインチューニング（LoRA）</h2>
+      <table>
+        <tr><th>モデル</th><th>Rank</th><th>LR</th><th>Batch</th><th>CV</th><th>説明</th></tr>
+        <tr><td>Gemma2-9B-IT</td><td>16</td><td>2e-4</td><td>8</td><td>0.945</td><td>メイン</td></tr>
+        <tr><td>Qwen3-8B</td><td>16</td><td>2e-4</td><td>8</td><td>0.944</td><td>意味的広さ</td></tr>
+        <tr><td>DeepSeek-Math-7B</td><td>16</td><td>2e-4</td><td>8</td><td>0.944</td><td>数学的論理性</td></tr>
+        <tr><td>Hunyuan-7B</td><td>16</td><td>2e-4</td><td>8</td><td>0.943</td><td>安定性</td></tr>
+      </table>
+    </section>
 
-  <section>
-    <h2>五、推論プロセス</h2>
-    <h3>① Gemma2-9B 推論</h3>
-    <ul>
-      <li>ベースモデルと LoRA 重みをロード</li>
-      <li>max length=256 でトークナイズ</li>
-      <li>バッチサイズ8で推論を実行</li>
-      <li>出力：<code>submission_gemma.csv</code>、<code>submission_gemma_prob.csv</code></li>
-    </ul>
-
-    <h3>② Qwen3 + DeepSeek 並列推論</h3>
-    <ul>
-      <li>マルチスレッド並列実行：Qwen3 は cuda:1、DeepSeek は cuda:0</li>
-      <li>同時推論により全体時間を約100秒に短縮</li>
-    </ul>
-
-    <h3>③ Hunyuan 推論</h3>
-    <ul>
-      <li>単一GPUで LoRA 重みをロードし Gemma と同様の手順で推論</li>
-    </ul>
-
-    <h3>④ 出力フォーマット</h3>
-    <pre><code>row_id, top_classes, prob_0, prob_1, ..., prob_24
+    <section>
+      <h2>五、推論プロセス</h2>
+      <ul>
+        <li>Gemma2-9B：単GPU推論、Top-25確率出力</li>
+        <li>Qwen3 + DeepSeek：マルチGPU並列推論（約100秒）</li>
+        <li>Hunyuan：単GPUで同様手順</li>
+      </ul>
+<pre><code>row_id, top_classes, prob_0, prob_1, ..., prob_24
 </code></pre>
-  </section>
+    </section>
 
-  <section>
-    <h2>六、アンサンブル戦略（Weighted Disagreement Ensemble）</h2>
-    <p>ロバスト性と汎化性能を高めるため、分岐処理メカニズムを備えた加重アンサンブルアルゴリズムを設計。</p>
-
-    <h3>Step 1️⃣ 各モデル出力の統合</h3>
-    <p>4モデルのTop-25確率ファイルを <code>row_id</code> で結合。</p>
-
-    <h3>Step 2️⃣ 総合スコアの算出</h3>
-    <pre><code>final_score = 0.6 * weighted_mean_prob \
+    <section>
+      <h2>六、アンサンブル戦略</h2>
+<pre><code>final_score = 0.6 * weighted_mean_prob \
              + 0.3 * agreement_bonus \
              + 0.1 * confidence_bonus
 </code></pre>
+      <p>4モデル出力を統合し、Top-3を最終予測。</p>
+    </section>
 
-    <h3>Step 3️⃣ モデル重み</h3>
-    <p>各モデルの特性に応じて重みを調整。</p>
+    <section>
+      <h2>七、結果概要</h2>
+      <table>
+        <tr><th>モデル</th><th>CV</th><th>Public</th><th>Private</th></tr>
+        <tr><td>DeepSeek-7B</td><td>0.944</td><td>0.942</td><td>0.942</td></tr>
+        <tr><td>Qwen3-8B</td><td>0.945</td><td>0.944</td><td>0.945</td></tr>
+        <tr><td>Gemma2-9B</td><td>0.942</td><td>0.943</td><td>0.944</td></tr>
+        <tr><td>Hunyuan-7B</td><td>0.943</td><td>0.943</td><td>0.943</td></tr>
+        <tr><td><strong>アンサンブル</strong></td><td><strong>0.948</strong></td><td><strong>0.945</strong></td><td><strong>0.946 🥈</strong></td></tr>
+      </table>
+    </section>
 
-    <h3>Step 4️⃣ 最終 Top-3 出力</h3>
-    <p>上位3クラスを選択して <code>submission.csv</code> を生成。</p>
-  </section>
+    <section>
+      <h2>八、環境</h2>
+      <ul>
+        <li>Transformers 4.56.1 / PEFT 0.11.1 / Torch 2.3</li>
+        <li>Kaggle T4×2 GPU</li>
+        <li>FP16 / BF16</li>
+        <li>総実行時間：約3分</li>
+      </ul>
+    </section>
 
-  <section>
-    <h2>七、スコア比較</h2>
-    <table>
-      <tr><th>モデル</th><th>CV</th><th>Public LB</th><th>Private LB</th></tr>
-      <tr><td>DeepSeek-7B</td><td>0.944</td><td>0.942</td><td>0.942</td></tr>
-      <tr><td>Qwen3-8B</td><td>0.945</td><td>0.944</td><td>0.945</td></tr>
-      <tr><td>Gemma2-9B</td><td>0.942</td><td>0.943</td><td>0.944</td></tr>
-      <tr><td>Hunyuan-7B</td><td>0.943</td><td>0.943</td><td>0.943</td></tr>
-      <tr><td><strong>アンサンブル（最終）</strong></td><td><strong>0.948</strong></td><td><strong>0.945</strong></td><td><strong>0.946 🥈</strong></td></tr>
-    </table>
-  </section>
-
-  <section>
-    <h2>八、環境および再現情報</h2>
-    <table>
-      <tr><th>項目</th><th>設定</th></tr>
-      <tr><td>フレームワーク</td><td>Transformers 4.56.1 / PEFT 0.11.1 / Torch 2.3</td></tr>
-      <tr><td>ハードウェア</td><td>Kaggle T4×2</td></tr>
-      <tr><td>精度</td><td>FP16 / BF16</td></tr>
-      <tr><td>バッチサイズ</td><td>4–8</td></tr>
-      <tr><td>総実行時間</td><td>約3分（4モデル + アンサンブルを含む）</td></tr>
-    </table>
-  </section>
-
-  <section>
-    <h2>九、プロジェクト構成</h2>
-    <pre><code>├── gemma2_inference.py
+    <section>
+      <h2>九、プロジェクト構成</h2>
+<pre><code>├── gemma2_inference.py
 ├── qwen3_deepseek_inference.py
 ├── hunyuan_inference.py
 ├── ensemble.py
 └── submission.csv
 </code></pre>
-  </section>
+    </section>
+
+  </div>
+
+
+  <!-- ===== English Version ===== -->
+  <div id="lang-en" class="lang">
+
+    <nav>
+      <div class="logo"><a href="../index.html" style="color:white;text-decoration:none;">← Back to Home</a></div>
+    </nav>
+
+    <section class="hero">
+      <h1>Charting Student Math Misunderstandings (MAP)</h1>
+      <p>🥈 Silver Medal (~Top 5%)  Rank 53 / 1858</p>
+      <p>Public LB 0.945 Private LB 0.946</p>
+      <p><a href="https://www.kaggle.com/competitions/map-charting-student-math-misunderstandings" target="_blank">[Competition Page]</a></p>
+    </section>
+
+    <section>
+      <h2>1. Problem Overview</h2>
+      <p>
+        Multi-class classification: predict the most likely <em>Category:Misconception</em> label (65 classes) from a math question,
+        the student’s chosen answer, and written explanation.
+      </p>
+      <ul>
+        <li>Unseen rules → domain generalization</li>
+        <li>Subtle semantic variations in explanations</li>
+        <li>Severe label imbalance</li>
+      </ul>
+    </section>
+
+    <section>
+      <h2>2. Overall Approach</h2>
+      <p>Adopted a <strong>multi-LLM LoRA fine-tuning + weighted ensemble</strong> strategy.</p>
+      <table>
+        <tr><th>Model</th><th>Size</th><th>Fine-tune</th><th>Role</th></tr>
+        <tr><td>Gemma2-9B-IT</td><td>9B</td><td>LoRA-CV945</td><td>Main baseline</td></tr>
+        <tr><td>Qwen3-8B</td><td>8B</td><td>LoRA-MAP</td><td>Semantic coverage</td></tr>
+        <tr><td>DeepSeek-Math-7B</td><td>7B</td><td>LoRA-MAP</td><td>Math logic understanding</td></tr>
+        <tr><td>Hunyuan-7B</td><td>7B</td><td>LoRA-MAP</td><td>Stable reasoning generalization</td></tr>
+      </table>
+    </section>
+
+    <section>
+      <h2>3. Data Processing</h2>
+<pre><code>train["target"] = train["Category"] + ":" + train["Misconception"]
+train["label"] = LabelEncoder().fit_transform(train["target"])
+</code></pre>
+<pre><code>idx = train.apply(lambda r: r.Category.split("_")[0], axis=1) == "True"
+correct = train.loc[idx].groupby(["QuestionId","MC_Answer"]).head(1)
+</code></pre>
+<pre><code>Question: {QuestionText}
+Answer: {MC_Answer}
+Correct? {Yes/No}
+Student Explanation: {StudentExplanation}
+</code></pre>
+    </section>
+
+    <section>
+      <h2>4. Model Fine-Tuning</h2>
+      <table>
+        <tr><th>Model</th><th>Rank</th><th>LR</th><th>Batch</th><th>CV</th></tr>
+        <tr><td>Gemma2-9B-IT</td><td>16</td><td>2e-4</td><td>8</td><td>0.945</td></tr>
+        <tr><td>Qwen3-8B</td><td>16</td><td>2e-4</td><td>8</td><td>0.944</td></tr>
+        <tr><td>DeepSeek-Math-7B</td><td>16</td><td>2e-4</td><td>8</td><td>0.944</td></tr>
+        <tr><td>Hunyuan-7B</td><td>16</td><td>2e-4</td><td>8</td><td>0.943</td></tr>
+      </table>
+    </section>
+
+    <section>
+      <h2>5. Inference Pipeline</h2>
+      <ul>
+        <li>Gemma2 single-GPU inference → Top-25 probabilities</li>
+        <li>Qwen3 + DeepSeek parallel on two GPUs (~100 s)</li>
+        <li>Hunyuan same as Gemma2</li>
+      </ul>
+<pre><code>row_id, top_classes, prob_0, prob_1, ..., prob_24
+</code></pre>
+    </section>
+
+    <section>
+      <h2>6. Ensemble Strategy</h2>
+<pre><code>final_score = 0.6 * weighted_mean_prob \
+             + 0.3 * agreement_bonus \
+             + 0.1 * confidence_bonus
+</code></pre>
+      <p>Combine four models and rank Top-3 predictions.</p>
+    </section>
+
+    <section>
+      <h2>7. Results Summary</h2>
+      <table>
+        <tr><th>Model</th><th>CV</th><th>Public</th><th>Private</th></tr>
+        <tr><td>DeepSeek-Math-7B</td><td>0.944</td><td>0.942</td><td>0.942</td></tr>
+        <tr><td>Qwen3-8B</td><td>0.945</td><td>0.944</td><td>0.945</td></tr>
+        <tr><td>Gemma2-9B</td><td>0.942</td><td>0.943</td><td>0.944</td></tr>
+        <tr><td>Hunyuan-7B</td><td>0.943</td><td>0.943</td><td>0.943</td></tr>
+        <tr><td><strong>Ensemble (final)</strong></td><td><strong>0.948</strong></td><td><strong>0.945</strong></td><td><strong>0.946 🥈</strong></td></tr>
+      </table>
+    </section>
+
+    <section>
+      <h2>8. Environment & Reproducibility</h2>
+      <ul>
+        <li>transformers 4.56.1 / peft 0.11.1 / torch 2.3</li>
+        <li>Kaggle T4×2 GPUs</li>
+        <li>FP16 / bfloat16 precision</li>
+        <li>Total runtime ≈ 3 min</li>
+      </ul>
+    </section>
+
+    <section>
+      <h2>9. Repository Structure</h2>
+<pre><code>├── gemma2_inference.py
+├── qwen3_deepseek_inference.py
+├── hunyuan_inference.py
+├── ensemble.py
+└── submission.csv
+</code></pre>
+    </section>
+
+  </div>
 
   <footer>
-    <p>© 2025 Yin Hanyang | Last updated October 2025</p>
+    <p>© 2025 Yin Hanyang</p>
   </footer>
+
+  <script>
+    const btn = document.getElementById("lang-toggle");
+    const jp = document.getElementById("lang-jp");
+    const en = document.getElementById("lang-en");
+    let isEN = false;
+    btn.addEventListener("click", ()=>{
+      isEN = !isEN;
+      if(isEN){
+        jp.classList.remove("active");
+        en.classList.add("active");
+        btn.textContent = "日本語";
+      } else {
+        en.classList.remove("active");
+        jp.classList.add("active");
+        btn.textContent = "English";
+      }
+    });
+  </script>
 
 </body>
 </html>
