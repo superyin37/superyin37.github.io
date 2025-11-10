@@ -102,7 +102,7 @@
       Model parameters (U, P) are updated using <strong>stochastic gradient descent (SGD)</strong> with momentum, and after convergence, binarization and cycle removal yield the final acyclic structure.<br><br>
       This approach effectively bridges L₀-like sparsity and continuous differentiability, allowing efficient structure learning through gradient-based optimization.
       <div class="img-box">
-        <img src="img/gumbel.png" alt="Gumbel-Softmax SGD Approach Illustration">
+        <img src="gumbel.png" alt="Gumbel-Softmax SGD Approach Illustration">
         <div class="img-caption">Figure 1. Conceptual diagram of Gumbel-Softmax SGD-based causal discovery.</div>
       </div>
 
@@ -119,7 +119,7 @@
       By incorporating L₀-type regularization and adaptive thresholding, the method achieves consistent structure recovery under explicit graph constraints—offering a contrast to the probabilistic relaxation in the Gumbel-Softmax framework.<br><br>
       Through comparative analysis of these two approaches, the research aims to establish a <strong>unified optimization framework</strong> that balances theoretical consistency, computational efficiency, and sparsity for large-scale causal discovery.
       <div class="img-box">
-        <img src="img/coordinate.png" alt="Coordinate Descent Approach Illustration">
+        <img src="coordinate.png" alt="Coordinate Descent Approach Illustration">
         <div class="img-caption">Figure 2. Iterative update process in Coordinate Descent-based causal discovery.</div>
       </div>
     </div>
@@ -166,7 +166,7 @@
       パラメータ $(U,P)$ をSGDで更新し、学習後にしきい値処理とサイクル除去を行うことで、最終的な<strong>非巡回グラフ構造</strong>を得る。<br><br>
       本アプローチは連続最適化に基づきつつ、確率的離散化を導入することで、L₀ノルムに近いスパース性と滑らかな勾配更新を両立する特徴を持つ。
       <div class="img-box">
-        <img src="img/gumbel_ja.png" alt="Gumbel-Softmax SGD アプローチ 図">
+        <img src="gumbel.png" alt="Gumbel-Softmax SGD アプローチ 図">
         <div class="img-caption">図1. Gumbel-Softmax SGDによる因果探索の概念図。</div>
       </div>
 
@@ -183,7 +183,7 @@
       また、L₀型ペナルティの導入や閾値調整を組み合わせることで、Gumbel-Softmax SGDとは異なる形で一貫性を確保しつつ、より明示的な構造制約下での最適化を可能にしている。<br><br>
       これら二つのアプローチの比較を通じ、連続最適化と組合せ最適化の橋渡しを行い、理論的一貫性・計算効率・スパース性のバランスを最適化する新しい枠組みの確立を目指している。
       <div class="img-box">
-        <img src="img/coordinate_ja.png" alt="Coordinate Descent アプローチ 図">
+        <img src="coordinate.png" alt="Coordinate Descent アプローチ 図">
         <div class="img-caption">図2. 座標降下法に基づく因果探索アルゴリズムの反復更新プロセス。</div>
       </div>
     </div>
@@ -211,4 +211,5 @@
     });
   </script>
 </bod
+
 
