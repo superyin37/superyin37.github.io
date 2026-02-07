@@ -1,0 +1,207 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Fraud Detection with Machine Learning</title>
+  <link rel="stylesheet" href="../../style.css" />
+  <style>
+    body { font-family: 'Inter', 'Noto Sans JP', sans-serif; line-height: 1.7; background: #fafafa; color: #222; }
+    .project-page { max-width: 900px; margin: 2rem auto; padding: 2rem; background: #fff; border-radius: 12px; box-shadow: 0 10px 30px rgba(0,0,0,0.08); }
+    .back-link { display: inline-block; margin-bottom: 1rem; text-decoration: none; color: #005bbb; font-weight: 600; }
+    h1, h2, h3, h4 { color: #111; margin-top: 1.5rem; }
+    hr { margin: 2rem 0; border: none; border-top: 1px solid #eee; }
+    ul { padding-left: 1.5rem; }
+    pre { background: #f4f4f4; padding: 1rem; border-radius: 8px; overflow-x: auto; }
+    code { background: #f0f0f0; padding: 0.2rem 0.4rem; border-radius: 3px; font-family: 'Courier New', monospace; }
+    pre code { background: none; padding: 0; }
+    table { width: 100%; border-collapse: collapse; margin: 1rem 0; }
+    table th, table td { border: 1px solid #ddd; padding: 0.75rem; text-align: left; }
+    figure { margin: 1.5rem 0; }
+    figure img { width: 100%; border-radius: 8px; }
+    figure figcaption { font-size: 0.9rem; color: #666; margin-top: 0.5rem; text-align: center; }
+    blockquote { border-left: 4px solid #005bbb; padding-left: 1rem; margin: 1rem 0; color: #555; }
+  </style>
+</head>
+<body>
+  <main class="project-page">
+    <a class="back-link" href="../../index.html">&larr; Back to Home</a>
+    <article>
+<h1>Fraud Detection with Machine Learning</h1>
+
+<hr />
+
+<h2>1. Background and Objective</h2>
+
+<p>This project focuses on developing a <strong>machine learning–based fraud detection system</strong> for real-world transaction data.  </p>
+<p>Fraudulent transactions are typically rare, highly heterogeneous, and evolve over time, making rule-based systems or single global models insufficient.</p>
+
+<p>The objective of this project is to build a <strong>robust, explainable, and scalable modeling framework</strong> that improves fraud detection performance by combining domain-informed feature engineering, user-segmentation modeling, and ensemble learning.</p>
+
+<hr />
+
+<h2>2. Data Characteristics and Challenges</h2>
+
+<p>The transaction data exhibits several industry-grade challenges:</p>
+
+<ul>
+<li><strong>Severe class imbalance</strong>: fraudulent transactions account for a very small fraction of all samples  </li>
+<li><strong>Missing values</strong>: some features are only observable under specific conditions  </li>
+<li><strong>Temporal dependency</strong>: user and merchant historical behavior strongly influences current transactions  </li>
+<li><strong>Strong heterogeneity</strong>: risk patterns differ significantly across users, merchants, and regions  </li>
+</ul>
+
+<p>Given these properties, the project prioritizes <strong>modeling strategy and feature design</strong> over excessive model complexity.</p>
+
+<hr />
+
+<h2>3. Feature Engineering</h2>
+
+<h3>3.1 User-Level Features</h3>
+
+<p>Encrypted address information enables unique identification of purchasers, allowing user-centric historical analysis.</p>
+
+<strong>Key idea: segment users based on purchase history</strong>
+
+<ul>
+<li><strong>New users</strong> (first-time purchasers)  </li>
+<li><strong>Long-time users</strong> (with purchase history)</li>
+</ul>
+
+<p>For users with purchase history, the following features were constructed:</p>
+
+<ul>
+<li>Number of historical purchases  </li>
+<li>Consistency between current and historical devices  </li>
+<li>Deviation of the current transaction amount from historical averages  </li>
+<li>Behavioral pattern shift indicators  </li>
+</ul>
+
+<p>These features capture <strong>behavioral consistency</strong>, which is critical for fraud detection.</p>
+
+<hr />
+
+<h3>3.2 Merchant-Level Features</h3>
+
+<p>To complement transaction-level signals, merchant-specific risk characteristics were incorporated:</p>
+
+<ul>
+<li>Historical fraud rate of the merchant  </li>
+<li>Historical transaction volume and amount  </li>
+<li><code>store_device_diversity</code> to capture abnormal device usage patterns  </li>
+</ul>
+
+<p>This enables the model to learn merchant-level risk profiles.</p>
+
+<hr />
+
+<h2>4. User Segmentation Modeling Strategy</h2>
+
+<p>New users and long-time users differ fundamentally in both <strong>available information</strong> and <strong>behavioral stability</strong>.  </p>
+<p>Therefore, this project adopts an <strong>explicit user segmentation modeling strategy</strong>.</p>
+
+<h3>4.1 Modeling Policy</h3>
+
+<ul>
+<li>Users are segmented based on historical transaction availability  </li>
+<li>Separate evaluation for:</li>
+</ul>
+<p>  - New users  </p>
+<p>  - Users with purchase history  </p>
+<ul>
+<li>Temporal order is strictly preserved to prevent data leakage  </li>
+</ul>
+
+<h3>4.2 Conceptual Diagram</h3>
+
+<p>!<a href="A_flowchart_infographic_explains_a_user_segmentati.png">User Segmentation Modeling Strategy</a></p>
+
+<hr />
+
+<h2>5. Model Selection</h2>
+
+<p>Multiple models were evaluated during experimentation:</p>
+
+<ul>
+<li><strong>CatBoost (primary model)</strong>  </li>
+<li>XGBoost  </li>
+<li>Random Forest  </li>
+<li>MLP / Transformer (exploratory)  </li>
+</ul>
+
+<p>Considering robustness to missing values, handling of categorical features, and training stability, <strong>CatBoost</strong> was selected as the core model.</p>
+
+<hr />
+
+<h2>6. Hyperparameter Tuning and Analysis</h2>
+
+<p>Systematic hyperparameter tuning was conducted for CatBoost, along with importance analysis.</p>
+
+<p>Key findings include:</p>
+
+<ul>
+<li><code>learning_rate</code> has the largest impact on performance  </li>
+<li><code>scale_pos_weight</code> is critical for improving F1-score under class imbalance  </li>
+<li>Tree depth and number of iterations mainly control model complexity and generalization  </li>
+</ul>
+
+<p>These insights guided efficient and interpretable tuning strategies.</p>
+
+<hr />
+
+<h2>7. Ensemble Learning</h2>
+
+<p>To further enhance robustness, <strong>AutoGluon</strong> was applied for ensembling:</p>
+
+<ul>
+<li>Automatic combination of multiple model predictions  </li>
+<li>Improved generalization and stability  </li>
+<li>Used as a benchmark against single-model performance  </li>
+</ul>
+
+<hr />
+
+<h2>8. Experimental Results (F1-score)</h2>
+
+<h3>8.1 Overall Performance</h3>
+
+<ul>
+<li>F1 score: <strong>0.31 → 0.50</strong></li>
+</ul>
+
+<h3>8.2 Segmented Performance</h3>
+
+<p>| User Group | Before | After |</p>
+<p>|---|---|---|</p>
+<p>| Users with purchase history | 0.44 | <strong>0.60</strong> |</p>
+<p>| Users without purchase history | 0.18 | <strong>0.30</strong> |</p>
+
+<p>These results indicate:</p>
+
+<ul>
+<li>Historical behavior features are highly influential for fraud detection  </li>
+<li>New users remain more challenging, but segmentation significantly improves performance  </li>
+<li>Group-wise evaluation better reflects real business impact than aggregate metrics  </li>
+</ul>
+
+<hr />
+
+<h2>9. Summary</h2>
+
+<p>This project demonstrates that effective fraud detection relies on:</p>
+
+<ul>
+<li>Domain-driven feature engineering  </li>
+<li>Modeling strategies tailored to imbalanced data  </li>
+<li>Explicit user segmentation (new vs. long-time users)  </li>
+<li>Robust learning with CatBoost and ensemble methods  </li>
+</ul>
+
+<p>The framework is production-oriented and can be naturally extended to merchant-level, regional, or time-window–based modeling.</p>
+
+<hr />
+
+    </article>
+  </main>
+</body>
+</html>

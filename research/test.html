@@ -1,0 +1,246 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>Research | Hanyang Yin</title>
+  <link rel="stylesheet" href="../style.css" />
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600&family=Noto+Sans+JP:wght@400;600&display=swap" rel="stylesheet">
+  <script src="https://polyfill.io/v3/polyfill.min.js?features=es6"></script>
+  <script id="MathJax-script" async src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js"></script>
+  <style>
+    :root {
+      --primary-color: #2B3A67;
+      --accent-color: #FFB800;
+      --bg-light: #f8f9fa;
+      --text-main: #333;
+    }
+
+    body { font-family: 'Inter', 'Noto Sans JP', sans-serif; color: var(--text-main); line-height: 1.6; }
+
+    /* Language Toggle */
+    .lang-toggle {
+      background: var(--accent-color);
+      border: none;
+      padding: 0.5rem 1rem;
+      border-radius: 4px;
+      cursor: pointer;
+      font-weight: 600;
+      transition: opacity 0.2s;
+    }
+    .lang-toggle:hover { opacity: 0.9; }
+    .lang-section { display: none; }
+    .lang-section.active { display: block; }
+
+    /* Layout Components */
+    .card {
+      background: #fff;
+      border: 1px solid #eaeaea;
+      padding: 1.5rem;
+      border-radius: 8px;
+      margin-bottom: 2rem;
+      box-shadow: 0 2px 4px rgba(0,0,0,0.05);
+    }
+    h2 { border-bottom: 2px solid var(--primary-color); padding-bottom: 0.3rem; margin-top: 2.5rem; }
+    h3 { color: var(--primary-color); margin-top: 1.5rem; border-left: 4px solid var(--accent-color); padding-left: 0.8rem;}
+
+    /* Math Styling */
+    .math {
+      background: var(--bg-light);
+      border-left: 4px solid var(--primary-color);
+      padding: 1.2rem;
+      margin: 1.2rem 0;
+      font-family: ui-monospace, SFMono-Regular, Consolas, monospace;
+      font-size: 1rem;
+      overflow-x: auto;
+    }
+
+    /* Image Layouts */
+    .img-box { margin: 2.5rem 0; text-align: center; }
+    .dual-images {
+      display: flex;
+      justify-content: center;
+      gap: 1.5rem;
+      flex-wrap: wrap;
+      margin-bottom: 0.8rem;
+    }
+    .dual-images img {
+      flex: 1 1 calc(45% - 1rem);
+      max-width: 480px;
+      height: auto;
+      border-radius: 8px;
+      box-shadow: 0 4px 12px rgba(0,0,0,0.1);
+    }
+    .single-img {
+      max-width: 800px;
+      width: 100%;
+      height: auto;
+      border-radius: 8px;
+      box-shadow: 0 4px 12px rgba(0,0,0,0.1);
+    }
+    .img-caption { font-size: 0.85rem; color: #666; margin-top: 0.8rem; font-style: italic; }
+
+    /* Table */
+    .results-table {
+      width: 100%;
+      border-collapse: collapse;
+      margin: 1.5rem 0;
+      font-size: 0.9rem;
+    }
+    .results-table th, .results-table td { border: 1px solid #ddd; padding: 0.75rem; text-align: center; }
+    .results-table th { background: var(--bg-light); font-weight: 600; }
+    .highlight-cell { font-weight: 600; color: #d32f2f; background: #fff5f5; }
+
+    @media (max-width: 600px) {
+      .dual-images img { flex: 1 1 100%; max-width: 100%; }
+    }
+
+    footer { text-align: center; padding: 2rem; color: #777; font-size: 0.9rem; border-top: 1px solid #eee; }
+  </style>
+</head>
+
+<body>
+  <nav>
+    <div class="logo">HANYANG YIN</div>
+    <ul class="nav-links">
+      <li><a href="../index.html">Home</a></li>
+    </ul>
+    <button id="lang-toggle" class="lang-toggle">日本語</button>
+  </nav>
+
+  <section class="hero">
+    <h1><span class="highlight">Research Overview</span></h1>
+    <p>DAG-Constrained Coordinate Descent for Causal Discovery</p>
+  </section>
+
+  <section id="en" class="lang-section active">
+    <h2>Research Background</h2>
+    <div class="card">
+      <p>Traditional statistical analysis and machine learning primarily focus on revealing <strong>correlations</strong> among variables. However, for understanding complex socio-economic or biological phenomena, as well as for policy design and decision-making support, it is essential to identify the <strong>causal relationships</strong> underlying the data.</p>
+      
+      <p>Within this context, <strong>causal inference</strong> aims to estimate intervention and counterfactual effects, while <strong>causal discovery</strong> seeks to estimate causal structures (directed acyclic graphs; DAGs) directly from observational data.</p>
+      
+      <p>Recently, approaches that formulate causal discovery as a <strong>continuous optimization problem</strong>—notably exemplified by NOTEARS—have attracted much attention. These methods relax the combinatorial search of DAGs into a differentiable optimization framework. However, most existing approaches employ an \(L_1\)-norm penalty to promote sparsity, which has been shown to <strong>lack consistency over the Markov equivalence class</strong> of the true graph. Conversely, the \(L_0\)-norm penalty offers theoretical consistency but is non-continuous and thus difficult to optimize via gradient-based methods.</p>
+      
+      <div class="img-box">
+        <div class="dual-images">
+          <img src="dag1.png" alt="Basic DAG Structure">
+          <img src="dag2.png" alt="Complex Causal Network">
+        </div>
+        <div class="img-caption">Figure 1. Examples of Directed Acyclic Graphs (DAGs) representing underlying causal mechanisms.</div>
+      </div>
+    </div>
+
+    <h2>Core Methodology</h2>
+    <div class="card">
+      <h3>1. Model Assumptions & A-formulation</h3>
+      We consider a linear Structural Equation Model (SEM) with independent noise:
+      <div class="math">$$X = B^T X + \varepsilon, \quad \varepsilon \sim \mathcal{N}(0, \Omega)$$</div>
+      where $B$ is the weighted adjacency matrix and $\Omega$ is a diagonal noise covariance matrix. We introduce the transformation:
+      <div class="math">$$A := (I - B)\Omega^{-1/2}$$</div>
+      Under this A-formulation, the log-likelihood optimization is converted into finding a sparse, invertible matrix $A$ that respects the DAG constraint.
+    </div>
+
+    <div class="card">
+      <h3>2. Coordinate Descent Algorithm</h3>
+      <p>Our method optimizes the structure by updating one coordinate (edge) at a time. Unlike gradient-based methods that move along the steepest descent in continuous space, Coordinate Descent (CD) explores the discrete structure space by making <strong>locally optimal, discrete moves</strong> that are guaranteed to stay within the DAG manifold.</p>
+      
+      <p>In each <strong>Epoch</strong>, the algorithm performs a random permutation of all unordered node pairs $\{i, j\}$. For each pair, we evaluate two potential directed edges ($i \to j$ and $j \to i$). The update is only accepted if it satisfies the acyclicity constraint and provides a larger objective decrease than the alternative direction.</p>
+
+      <div class="img-box">
+        <img src="coordinate.png" alt="CD Search Space" class="single-img" style="max-width: 500px;">
+        <div class="img-caption">Figure 2. Conceptual visualization of the Coordinate Descent search process on the DAG manifold.</div>
+      </div>
+
+      <h4>Epoch-based Traversal Strategy</h4>
+      <p>By iterating through epochs and diagonal updates, the algorithm ensures that every potential causal link is revisited under the context of the currently estimated graph. This iterative refinement allows the model to escape local minima that often trap naive greedy search algorithms.</p>
+
+      <div class="img-box">
+        <img src="epoch.png" alt="Epoch-based CD Flow" class="single-img" style="max-width: 500px;">
+        <div class="img-caption">Figure 3. Logic flow of the Epoch-based Coordinate Descent (A-formulation).</div>
+      </div>
+
+      <h4>Analytical Closed-Form Solution</h4>
+      Fixing all other entries, the optimal update $\delta^*$ is computed analytically:
+      <div class="math">
+        $$\delta^* = \frac{2(b - \alpha)}{-(c + \alpha b) - \sqrt{(c - \alpha b)^2 + 4\alpha^2 c}}$$
+      </div>
+      where $c = S_{ii}$, $b = (SA)_{ij}$, and $\alpha = (A^{-1})_{ji}$. This ensures each step is <strong>computationally exact</strong> and numerically stable, avoiding the need for expensive line-search or inner-loop iterations.
+    </div>
+
+    <h2>Experimental Results</h2>
+    <div class="card">
+      <table class="results-table">
+        <thead>
+          <tr>
+            <th>Index</th><th>CD (Ours)</th><th>CD_L0 (Ours)</th><th>GOLEM_EV</th><th>GOLEM_NV</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr><td>1</td><td class="highlight-cell">0.79</td><td>0.78</td><td>0.60</td><td>0.50</td></tr>
+          <tr><td>2</td><td class="highlight-cell">0.81</td><td>0.64</td><td>0.56</td><td>0.57</td></tr>
+          <tr><td>3</td><td class="highlight-cell">1.00</td><td>0.88</td><td>1.00</td><td>1.00</td></tr>
+          <tr><td>4</td><td class="highlight-cell">0.74</td><td>0.38</td><td>0.02</td><td>0.20</td></tr>
+          <tr><td>5</td><td class="highlight-cell">0.61</td><td>0.45</td><td>0.01</td><td>0.03</td></tr>
+          <tr><td>6</td><td class="highlight-cell">0.84</td><td>0.84</td><td>0.35</td><td>0.23</td></tr>
+          <tr><td>7</td><td class="highlight-cell">0.52</td><td>0.36</td><td>0.00</td><td>0.00</td></tr>
+          <tr><td>8</td><td class="highlight-cell">0.81</td><td>0.56</td><td>0.06</td><td>0.00</td></tr>
+          <tr><td>9</td><td>0.60</td><td class="highlight-cell">0.68</td><td>0.08</td><td>0.00</td></tr>
+        </tbody>
+      </table>
+      <p>The <strong>CD</strong> method shows superior performance in recovering true causal links, particularly in high-sparsity scenarios where GOLEM struggles with soft acyclicity penalties.</p>
+    </div>
+  </section>
+
+  <section id="ja" class="lang-section">
+    <h2>研究背景</h2>
+    <div class="card">
+      <p>従来の統計解析や機械学習は、主に変数間の<strong>「相関関係」</strong>を捉えることに重点を置いてきました。しかし、複雑な社会経済現象の理解や意思決定支援においては、データに潜む<strong>「因果関係」</strong>を特定することが不可欠です。本研究では、観測データから因果構造（DAG）を直接推定する「因果探索」に焦点を当てます。</p>
+      
+      <p>近年、NOTEARSに代表される<strong>連続最適化</strong>による因果探索が注目されていますが、既存手法の多くは$L_1$ノルムペナルティによるバイアスや、マルコフ同値類上での一貫性の欠如という課題を抱えています。本研究では、$L_0$型スパース性を維持しつつ、厳密なDAG制約下で最適化を行う新しい座標降下法を提案します。</p>
+
+      <div class="img-box">
+        <div class="dual-images">
+          <img src="dag1.png" alt="DAG構造例1">
+          <img src="dag2.png" alt="DAG構造例2">
+        </div>
+        <div class="img-caption">図1. 因果メカニズムを表現する有向非巡回グラフ（DAG）の例。</div>
+      </div>
+    </div>
+
+    <h2>研究内容：アルゴリズムの詳細</h2>
+    <div class="card">
+      <h3>座標降下法（Coordinate Descent）の戦略</h3>
+      <p>提案アルゴリズムは、全変数を同時に更新するのではなく、各エッジを逐次的に更新します。各エッジの更新は、他のエッジの状態を固定した上での一次元最適化問題として解かれます。</p>
+      
+      <p><strong>エポックベースの更新：</strong> 毎エポックごとにノード対の順序をランダムに入れ替え（Permutation）、因果方向の有無と向きを判定します。これにより、局所解に陥るリスクを低減し、より真の構造に近いグラフへと収束させることが可能になります。</p>
+
+      <div class="img-box">
+        <img src="epoch.png" alt="アルゴリズムフロー" class="single-img" style="max-width: 500px;">
+        <div class="img-caption">図3. エポックベース座標降下法の処理フロー（A定式化）。</div>
+      </div>
+    </div>
+
+    <h2>実験結果</h2>
+    <div class="card">
+      <p>提案手法は、特にスパース性が高いデータセットにおいて、既存のGOLEM等の手法を大きく上回る復元精度を達成しました。座標降下法による離散的な探索が、連続最適化におけるバイアスを効果的に回避していることが示唆されます。</p>
+    </div>
+  </section>
+
+  <footer>
+    © 2026 Hanyang Yin — The University of Tokyo
+  </footer>
+
+  <script>
+    const btn = document.getElementById('lang-toggle');
+    const en = document.getElementById('en');
+    const ja = document.getElementById('ja');
+    btn.addEventListener('click', () => {
+      const isEN = en.classList.contains('active');
+      en.classList.toggle('active', !isEN);
+      ja.classList.toggle('active', isEN);
+      btn.textContent = isEN ? 'English' : '日本語';
+    });
+  </script>
+</body>
+</html>

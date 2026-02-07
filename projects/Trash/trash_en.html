@@ -1,0 +1,359 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Kitakyushu City Smart Waste Sorting System  </title>
+  <link rel="stylesheet" href="../../style.css" />
+  <style>
+    body { font-family: 'Inter', 'Noto Sans JP', sans-serif; line-height: 1.7; background: #fafafa; color: #222; }
+    .project-page { max-width: 900px; margin: 2rem auto; padding: 2rem; background: #fff; border-radius: 12px; box-shadow: 0 10px 30px rgba(0,0,0,0.08); }
+    .back-link { display: inline-block; margin-bottom: 1rem; text-decoration: none; color: #005bbb; font-weight: 600; }
+    h1, h2, h3, h4 { color: #111; margin-top: 1.5rem; }
+    hr { margin: 2rem 0; border: none; border-top: 1px solid #eee; }
+    ul { padding-left: 1.5rem; }
+    pre { background: #f4f4f4; padding: 1rem; border-radius: 8px; overflow-x: auto; }
+    code { background: #f0f0f0; padding: 0.2rem 0.4rem; border-radius: 3px; font-family: 'Courier New', monospace; }
+    pre code { background: none; padding: 0; }
+    table { width: 100%; border-collapse: collapse; margin: 1rem 0; }
+    table th, table td { border: 1px solid #ddd; padding: 0.75rem; text-align: left; }
+    figure { margin: 1.5rem 0; }
+    figure img { width: 100%; border-radius: 8px; }
+    figure figcaption { font-size: 0.9rem; color: #666; margin-top: 0.5rem; text-align: center; }
+    blockquote { border-left: 4px solid #005bbb; padding-left: 1rem; margin: 1rem 0; color: #555; }
+  </style>
+</head>
+<body>
+  <main class="project-page">
+    <a class="back-link" href="../../index.html">&larr; Back to Home</a>
+    <article>
+<h1>Kitakyushu City Smart Waste Sorting System  </h1>
+<strong>Interview Project Introduction</strong>
+
+<h2>Project Overview</h2>
+
+<strong>Project Name</strong>: Kita – Kitakyushu City Smart Waste Sorting Q&A System  
+<strong>Project Type</strong>: RAG (Retrieval-Augmented Generation) Question Answering System  
+<strong>Development Period</strong>: GMO Internship Project  
+<strong>Team Size</strong>: 3 members (Sota Aoki, Hanyang Yin, Taro Yasuda)  
+<strong>My Role</strong>: [Please describe your specific role and responsibilities]
+
+<hr />
+
+<h2>Background and Objectives</h2>
+
+<h3>Business Challenges</h3>
+<ul>
+<li>Waste sorting rules in Kitakyushu City are complex, making it difficult for users to quickly obtain accurate information</li>
+<li>Garbage collection days differ by neighborhood, making searches inconvenient</li>
+<li>Existing search methods are inefficient and provide a poor user experience</li>
+</ul>
+
+<h3>Solution</h3>
+<p>We developed a smart Q&A system based on a RAG architecture that provides the following through natural language interaction:</p>
+<ul>
+<li>Search for waste sorting rules</li>
+<li>Lookup of garbage collection days by town name</li>
+<li>Extensible custom knowledge base functionality</li>
+</ul>
+
+<hr />
+
+<h2>System Architecture Design</h2>
+
+<h3>Technology Stack Selection</h3>
+
+<strong>Frontend Layer</strong>
+<ul>
+<li><strong>Streamlit</strong>: Rapid development of an interactive web UI</li>
+<li><strong>GPU Monitoring</strong>: Real-time resource usage display via NVML / nvidia-smi</li>
+</ul>
+
+<strong>Backend Layer</strong>
+<ul>
+<li><strong>FastAPI</strong>: Asynchronous API framework supporting high concurrency</li>
+<li><strong>RESTful APIs</strong>: Dual response modes (blocking / streaming)</li>
+</ul>
+
+<strong>Core RAG Engine</strong>
+<ul>
+<li><strong>ChromaDB</strong>: Vector database supporting efficient semantic search</li>
+<li><strong>MeCab</strong>: Japanese morphological analysis</li>
+<li><strong>Hybrid Grounding System v2.0</strong>: In-house intelligent item name recognition system</li>
+</ul>
+
+<strong>LLM Inference</strong>
+<ul>
+<li><strong>Ollama</strong>: Local deployment ensuring data privacy</li>
+<li><strong>Llama-3.1-Swallow-8B</strong>: Japanese-optimized large language model</li>
+<li><strong>cl-nagoya-ruri-large</strong>: Japanese embedding model</li>
+</ul>
+
+<h3>Architecture Highlights</h3>
+
+<pre><code>
+User Input → Hybrid Grounding → ChromaDB Search → RAG Prompt → LLM Generation → Response
+(Smart Recognition)   (Multi-source Retrieval)                (Streaming / Blocking)
+
+</code></pre><code>
+
+<strong>Three-layer Architecture</strong>:
+<ul>
+<li><strong>Presentation Layer</strong> (Streamlit): Chat UI, logs display, file upload</li>
+<li><strong>Business Layer</strong> (FastAPI): API routing, RAG orchestration, data validation</li>
+<li><strong>Data Layer</strong> (ChromaDB): Waste rules, area information, user knowledge base</li>
+</ul>
+
+<hr />
+
+<h2>Core Technical Innovations</h2>
+
+<h3>1. Hybrid Grounding System v2.0 (Key Technology)</h3>
+
+<strong>Problem</strong>: Traditional MeCab tokenization lacks accuracy for complex queries
+
+<strong>Innovative Solution</strong>: A three-layer intelligent recognition system
+
+<h4>Layer 1: Exact Match</h4>
+<ul>
+<li>Full match with database → confidence 1.0 → immediate response</li>
+<li>Response time < 5 ms</li>
+</ul>
+
+<h4>Layer 2: Smart Routing (Path Selection)</h4>
+<pre><code>if input_length < 20:
+    → Path A (Fast Path): Global embedding search
+    → Response time < 300 ms
+else:
+    → Path A + Path B (Dual Path):
+       - Path A: Global semantic search
+       - Path B: LLM-assisted phrase extraction + segmented search
+    → Response time < 600 ms
+</code></pre></code>
+
+<h4>Layer 3: Confidence Evaluation</h4>
+
+<p>* <strong>High</strong> (≥ 0.70): Direct adoption</p>
+<p>* <strong>Medium</strong> (0.45–0.70): Presented to user</p>
+<p>* <strong>Low</strong> (< 0.45): Automatic fallback to MeCab</p>
+
+<h4>Results</h4>
+
+<p>* Accuracy improvement: 78% → 92%</p>
+<p>* Average response time: < 400 ms</p>
+<p>* Automatic fault tolerance via fallback mechanisms</p>
+
+<hr />
+
+<h3>2. Streaming Response Optimization</h3>
+
+<strong>Problem</strong>: Blocking responses caused long wait times and poor UX
+
+<strong>Solution</strong>:
+
+<p>* Implemented Server-Sent Events (SSE) for streaming responses</p>
+<p>* Token-by-token output with Time to First Byte (TTFB) < 1s</p>
+<p>* Real-time frontend rendering, significantly reducing perceived latency</p>
+
+<hr />
+
+<h3>3. Multi-source Knowledge Base Integration</h3>
+
+<strong>Three independent ChromaDB collections</strong>:
+
+<ul>
+<li><strong>gomi</strong>: Waste sorting rules (static data)</li>
+<li><strong>area</strong>: Town-based collection schedules (static data)</li>
+<li><strong>knowledge</strong>: User-uploaded knowledge (dynamic extension)</li>
+</ul>
+
+<strong>Benefits</strong>:
+
+<p>* Higher retrieval accuracy through specialization</p>
+<p>* Support for hot updates of knowledge bases</p>
+<p>* Easier access control and version management</p>
+
+<hr />
+
+<h2>Implementation Details</h2>
+
+<h3>RAG Pipeline Walkthrough</h3>
+
+<pre><code># 1. Query understanding
+query = "I want to dispose of a laptop"
+
+<h1>2. Item extraction via Hybrid Grounding</h1>
+result = hybrid_grounding.extract(query)
+<h1>→ primary_candidate: "laptop"</h1>
+<h1>→ confidence: "high" (0.98)</h1>
+<h1>→ execution_time: 35ms</h1>
+
+<h1>3. Multi-source retrieval</h1>
+gomi_docs = chroma_gomi.query(embedding(candidate_item), k=3)
+area_docs = chroma_area.query(embedding(town_name), k=2)
+knowledge_docs = chroma_knowledge.query(embedding(query), k=2)
+
+<h1>4. Context construction</h1>
+context = format_rag_prompt(gomi_docs, area_docs, knowledge_docs)
+
+<h1>5. LLM generation</h1>
+response = ollama.generate(
+    model="swallow:latest",
+    prompt=context + query,
+    stream=True  # streaming response
+)
+</code></pre>
+
+<h3>Data Structure Design</h3>
+
+<strong>ChromaDB Collection Schema</strong>:
+
+<pre><code># gomi collection
+{
+    "id": "gomi_001",
+    "document": "Please dispose of laptops as bulky waste...",
+    "metadata": {
+        "item_name": "laptop",
+        "category": "bulky waste",
+        "source_file": "gomi_rules.pdf",
+        "page": 15
+    }
+}
+
+<h1>area collection</h1>
+{
+    "id": "area_001",
+    "document": "Household waste in Yahatahigashi Ward is collected on Mondays and Thursdays...",
+    "metadata": {
+        "town": "Yahatahigashi Ward",
+        "waste_type": "household waste",
+        "collection_days": ["Mon", "Thu"]
+    }
+}
+</code></pre>
+
+<h3>API Design</h3>
+
+<strong>Blocking Mode</strong> – POST <code>/api/bot/respond</code>
+
+<pre><code>{
+  "message": "I want to dispose of a laptop",
+  "user_id": "user123",
+  "stream": false
+}
+</code></pre>
+
+<strong>Streaming Mode</strong> – POST <code>/api/bot/respond_stream</code>
+
+<pre><code>data: {"type": "token", "content": "laptop"}
+...
+data: {"type": "done", "references": [...]}
+</code></pre>
+
+<hr />
+
+<h2>Performance Metrics</h2>
+
+<h3>Response Performance</h3>
+
+<p>* <strong>TTFB (Time to First Byte)</strong>: 800 ms</p>
+<p>* <strong>Full Response Time</strong>: 3–5 seconds (depending on answer length)</p>
+<p>* <strong>Hybrid Grounding</strong>: 35–600 ms</p>
+<p>* <strong>ChromaDB Retrieval</strong>: 50–150 ms</p>
+
+<h3>Accuracy Metrics</h3>
+
+<p>* <strong>Item Recognition Accuracy</strong>: 92% (vs. MeCab 78%)</p>
+<p>* <strong>Waste Rule Accuracy</strong>: 96%</p>
+<p>* <strong>Area Information Accuracy</strong>: 99% (structured data)</p>
+
+<h3>System Resources</h3>
+
+<p>* <strong>VRAM Usage</strong>: 6–8 GB (8B model)</p>
+<p>* <strong>CPU Usage</strong>: 20–40%</p>
+<p>* <strong>Memory Usage</strong>: 4–6 GB</p>
+
+<hr />
+
+<h2>Development Process and Challenges</h2>
+
+<h3>Challenge 1: Low Accuracy in Japanese Item Name Extraction</h3>
+
+<strong>Issue</strong>:
+
+<p>* MeCab tokenization struggles with long sentences and compound nouns</p>
+<p>* Example: “使わなくなったノートパソコン” → extraction failure</p>
+
+<strong>Resolution</strong>:
+
+<ul>
+<li>Evaluated existing NER solutions → unsuitable for waste-sorting domain</li>
+<li>Tested pure embedding-based search → effective for short phrases only</li>
+<li>Designed a hybrid solution combining global search and LLM extraction</li>
+<li>Implemented automatic fallback for robustness</li>
+</ul>
+
+<strong>Result</strong>: Accuracy improved from 78% to 92%
+
+<hr />
+
+<h3>Challenge 2: Choppy Streaming Responses</h3>
+
+<strong>Issue</strong>: Frontend rendering lag and token accumulation
+
+<strong>Solution</strong>:
+
+<p>* Tuned backend buffer size</p>
+<p>* Implemented asynchronous updates using <code>useEffect</code> + <code>useState</code></p>
+<p>* Added heartbeat detection mechanism</p>
+
+<hr />
+
+<h3>Challenge 3: ChromaDB Performance Optimization</h3>
+
+<strong>Optimizations</strong>:
+
+<ul>
+<li>Separated collections (gomi / area / knowledge)</li>
+<li>Tuned <code>n_results</code> parameter (3–5)</li>
+<li>Applied metadata filtering to remove irrelevant results</li>
+<li>Enabled persistence mode to avoid reload overhead</li>
+</ul>
+
+<hr />
+
+<h2>Key Learnings</h2>
+
+<h3>Technical Growth</h3>
+
+<ul>
+<li><strong>RAG Architecture</strong>: Deep understanding from theory to production</li>
+<li><strong>Vector Databases</strong>: Mastery of ChromaDB usage and optimization</li>
+<li><strong>LLM Applications</strong>: Prompt engineering and streaming implementation</li>
+<li><strong>Full-stack Development</strong>: End-to-end FastAPI backend and Streamlit frontend</li>
+<li><strong>Performance Optimization</strong>: Bottleneck identification, metrics-driven iteration</li>
+</ul>
+
+<h3>Engineering Skills</h3>
+
+<ul>
+<li><strong>System Design</strong>: Modular design, layered architecture, interface definition</li>
+<li><strong>Code Quality</strong>: Pydantic validation, type hints, exception handling</li>
+<li><strong>Documentation</strong>: Architecture docs, API docs, README authoring</li>
+<li><strong>Team Collaboration</strong>: Git-based version control, code reviews, task allocation</li>
+</ul>
+
+<h3>Business Understanding</h3>
+
+<ul>
+<li><strong>Requirement Analysis</strong>: Designing solutions from real user pain points</li>
+<li><strong>User Experience</strong>: Streaming responses, confidence indicators, transparent logs</li>
+<li><strong>Scalability</strong>: Support for user-uploaded knowledge and continuous iteration</li>
+</ul>
+
+<hr />
+
+    </article>
+  </main>
+</body>
+</html>

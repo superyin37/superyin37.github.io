@@ -1,0 +1,316 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>建築設計企画支援AIシステム  </title>
+  <link rel="stylesheet" href="../../style.css" />
+  <style>
+    body { font-family: 'Inter', 'Noto Sans JP', sans-serif; line-height: 1.7; background: #fafafa; color: #222; }
+    .project-page { max-width: 900px; margin: 2rem auto; padding: 2rem; background: #fff; border-radius: 12px; box-shadow: 0 10px 30px rgba(0,0,0,0.08); }
+    .back-link { display: inline-block; margin-bottom: 1rem; text-decoration: none; color: #005bbb; font-weight: 600; }
+    h1, h2, h3, h4 { color: #111; margin-top: 1.5rem; }
+    hr { margin: 2rem 0; border: none; border-top: 1px solid #eee; }
+    ul { padding-left: 1.5rem; }
+    pre { background: #f4f4f4; padding: 1rem; border-radius: 8px; overflow-x: auto; }
+    code { background: #f0f0f0; padding: 0.2rem 0.4rem; border-radius: 3px; font-family: 'Courier New', monospace; }
+    pre code { background: none; padding: 0; }
+    table { width: 100%; border-collapse: collapse; margin: 1rem 0; }
+    table th, table td { border: 1px solid #ddd; padding: 0.75rem; text-align: left; }
+    figure { margin: 1.5rem 0; }
+    figure img { width: 100%; border-radius: 8px; }
+    figure figcaption { font-size: 0.9rem; color: #666; margin-top: 0.5rem; text-align: center; }
+    blockquote { border-left: 4px solid #005bbb; padding-left: 1rem; margin: 1rem 0; color: #555; }
+  </style>
+</head>
+<body>
+  <main class="project-page">
+    <a class="back-link" href="../../index.html">&larr; Back to Home</a>
+    <article>
+<h1>建築設計企画支援AIシステム  </h1>
+<strong>Architecture Design Planning AI Assistant</strong>
+
+<p>Author: 殷晗陽  </p>
+<p>Role: Product Design / System Architecture / Core Developer  </p>
+
+<p>Keywords: LLM · RAG · OCR · PPT Generation · AWS · Docker · AI Agent</p>
+
+<hr />
+
+<h2>プロジェクト概要（Overview）</h2>
+
+<p>本プロジェクトは、建築設計の企画初期段階を対象としたインテリジェント支援システムであり、大規模言語モデル、複数知識ベース検索、自動コンテンツ生成、画像生成技術を統合することで、要件整理から構想立案、成果物作成までを一貫して支援します。</p>
+
+<p>主な利用対象は、建築設計者、建築系学生、企画担当者であり、企画業務のハードルを下げ、設計効率と専門性の向上を目的としています。</p>
+
+<blockquote>主要目標：非専門ユーザーでも専門レベルの建築企画案を構築できるようにすること。</blockquote>
+
+<hr />
+
+<h2>システム全体構成（System Architecture）</h2>
+
+<p>!<a href="images/system_arch.png">System Architecture</a></p>
+
+<blockquote>図1：システム全体構成図</blockquote>
+
+<p>本システムは、「フロントエンド + 中間制御層 + AIエンジン + 多種データベース」からなる階層型アーキテクチャを採用しています。</p>
+
+<p>主な構成要素は以下の通りです。</p>
+
+<ul>
+<li>Web Frontend（ユーザーインターフェース）</li>
+<li>API Gateway（業務制御）</li>
+<li>LLM Service（大規模言語モデルサービス）</li>
+<li>RAG Engine（知識拡張モジュール）</li>
+<li>OCR Service（画像解析モジュール）</li>
+<li>Storage Layer（データ管理層）</li>
+</ul>
+
+<hr />
+
+<h2>🔹 機能モジュール1：多知識ベース統合型QAシステム（RAG-based Chat System）</h2>
+
+<h3>機能概要</h3>
+
+<p>本モジュールは Gemini 大規模言語モデルと RAG 技術を組み合わせ、建築分野に特化した高精度な質疑応答機能を実現します。</p>
+
+<p>接続されている主な知識ベースは以下の通りです。</p>
+
+<ul>
+<li>建築設計事例データベース（公共建築中心・万件規模）</li>
+<li>建築法規・規範データベース（業界標準文書）</li>
+<li>建築設計知識データベース（チーム独自整理資料）</li>
+</ul>
+
+<h3>システムフロー</h3>
+
+<pre><code>
+User Query
+↓
+Intent Recognition
+↓
+Knowledge Retrieval
+↓
+RAG Fusion
+↓
+LLM Generation
+↓
+Final Answer
+
+</code></pre>
+
+<h3>画面例</h3>
+
+<p>!<a href="images/chat_ui.png">Chat UI</a></p>
+
+<blockquote>図2：RAG型QAシステム画面</blockquote>
+
+<h3>技術的特徴</h3>
+
+<ul>
+<li>多知識ベース動的ルーティング</li>
+<li>意図分類による検索制御</li>
+<li>ベクトル検索および文書再ランキング</li>
+<li>ハルシネーション抑制設計</li>
+</ul>
+
+<hr />
+
+<h2>🔹 機能モジュール2：建築企画案生成システム（PPT Generator）</h2>
+
+<h3>機能概要</h3>
+
+<p>本モジュールは、ユーザーがゼロから建築企画案を構築し、最終的に編集可能な PPT 形式で出力することを目的としています。</p>
+
+<p>基本コンセプト：<strong>対話誘導 + 事例参照 + 自動生成</strong></p>
+
+<h3>業務フロー</h3>
+
+<ul>
+<li>要件収集（対話型誘導）</li>
+<li>敷地分析（地図API連携）</li>
+<li>事例マッチング</li>
+<li>嗜好選択</li>
+<li>構成案生成</li>
+<li>手動編集</li>
+<li>PPT自動生成</li>
+</ul>
+
+<h3>フロー図</h3>
+
+<p>!<a href="images/ppt_flow.png">PPT Flow</a></p>
+
+<blockquote>図3：企画生成フロー</blockquote>
+
+<h3>編集画面</h3>
+
+<p>!<a href="images/ppt_editor.png">PPT Editor</a></p>
+
+<blockquote>図4：PPT編集画面</blockquote>
+
+<h3>Prompt設計方針</h3>
+
+<ul>
+<li>階層型Prompt構造</li>
+<li>ページ単位Prompt設計</li>
+<li>ロールベース設計</li>
+<li>制約付き出力テンプレート</li>
+</ul>
+
+<hr />
+
+<h2>🔹 機能モジュール3：建築パース自動生成システム（Image Generation）</h2>
+
+<h3>機能概要</h3>
+
+<p>本モジュールは、複数の画像生成APIを統合し、ユーザー要望に応じた建築パースを自動生成します。</p>
+
+<p>現在対応：</p>
+
+<ul>
+<li>NanoBana API</li>
+<li>[その他画像生成API]</li>
+</ul>
+
+<p>今後の展開：</p>
+
+<ul>
+<li>建築分野特化モデルの微調整</li>
+<li>マルチビュー生成</li>
+<li>構造一貫性制御</li>
+</ul>
+
+<h3>生成例</h3>
+
+<p>!<a href="images/image_gen.png">Image Generation</a></p>
+
+<blockquote>図5：生成パース例</blockquote>
+
+<hr />
+
+<h2>重点モジュール：CAD建築規範インテリジェント解析システム（個人開発）</h2>
+
+<h3>背景</h3>
+
+<p>従来の建築規範検索は手作業によるページ探索が必要であり、作業効率および正確性に課題がありました。</p>
+
+<p>本モジュールでは以下を実現しています。</p>
+
+<blockquote>CADスクリーンショット → 規範ページ自動特定 → PDF即時取得</blockquote>
+
+<h3>システムフロー</h3>
+
+<pre><code>
+PDF Preprocess → OCR Indexing → Page Database
+↑
+CAD Screenshot → OCR + LLM → Code Extraction
+↓
+Page Matching
+↓
+PDF Return
+
+</code></pre>
+
+<h3>画面例</h3>
+
+<p>!<a href="images/cad_query.png">CAD Query</a></p>
+
+<blockquote>図6：CAD解析画面</blockquote>
+
+<h3>コア技術</h3>
+
+<ul>
+<li>建築規範PDFの一括OCR分割</li>
+<li>マルチ戦略文字認識融合</li>
+<li>番号規則モデリング</li>
+<li>高耐障害インデックス設計</li>
+<li>APIサービス化設計</li>
+</ul>
+
+<h3>エンジニアリング実装</h3>
+
+<ul>
+<li>Dockerによるコンテナ化</li>
+<li>AWS EC2でのクラウド運用</li>
+<li>RESTful API設計</li>
+<li>自動ログ監視</li>
+</ul>
+
+<hr />
+
+<h2>担当役割と貢献（My Contributions）</h2>
+
+<p>本プロジェクトにおいて、主にプロダクト設計およびシステムアーキテクチャ設計を担当し、複数の中核機能の開発を担いました。</p>
+
+<h3>主な担当内容</h3>
+
+<ul>
+<li>全体アーキテクチャ設計</li>
+<li>UX／業務フロー設計</li>
+<li>RAG問答基盤構築</li>
+<li>PPT生成プロセス設計</li>
+<li>Prompt設計体系構築</li>
+<li>CAD解析モジュールの単独開発</li>
+<li>クラウド環境構築およびAPI設計</li>
+</ul>
+
+<h3>技術的価値</h3>
+
+<ul>
+<li>複雑な建築企画業務の自動化設計</li>
+<li>AIシステムの実運用レベルへの落とし込み</li>
+<li>拡張性を考慮した基盤構築</li>
+</ul>
+
+<hr />
+
+<h2>技術スタック（Tech Stack）</h2>
+
+<p>| 分類 | 技術 |</p>
+<p>|------|------|</p>
+<p>| LLM | Gemini |</p>
+<p>| RAG | FAISS / Chroma |</p>
+<p>| OCR | PaddleOCR / Custom |</p>
+<p>| Backend | FastAPI |</p>
+<p>| Frontend | React / Vue |</p>
+<p>| Cloud | AWS EC2 |</p>
+<p>| Deploy | Docker |</p>
+<p>| DB | PostgreSQL / S3 / VectorDB |</p>
+
+<hr />
+
+<h2>技術課題と解決策（Challenges）</h2>
+
+<h3>1. RAG精度の不安定性</h3>
+
+<p>課題：検索ノイズが多い  </p>
+<p>対策：多段フィルタリング＋再ランキング</p>
+
+<h3>2. OCR認識精度の低下</h3>
+
+<p>課題：CAD文字の複雑性  </p>
+<p>対策：OCR＋LLM補正融合</p>
+
+<h3>3. 要件入力の不完全性</h3>
+
+<p>課題：情報欠損  </p>
+<p>対策：多段対話誘導設計</p>
+
+<hr />
+
+<h2>今後の展開（Future Work）</h2>
+
+<ul>
+<li>建築特化生成モデルの開発</li>
+<li>マルチモーダル統合設計</li>
+<li>BIMシステム連携</li>
+<li>エンタープライズ対応強化</li>
+</ul>
+
+<hr />
+<p>```</p>
+
+    </article>
+  </main>
+</body>
+</html>

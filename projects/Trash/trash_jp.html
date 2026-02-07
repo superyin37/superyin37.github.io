@@ -1,0 +1,350 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>北九州市スマートごみ分別システム 面接プロジェクト紹介</title>
+  <link rel="stylesheet" href="../../style.css" />
+  <style>
+    body { font-family: 'Inter', 'Noto Sans JP', sans-serif; line-height: 1.7; background: #fafafa; color: #222; }
+    .project-page { max-width: 900px; margin: 2rem auto; padding: 2rem; background: #fff; border-radius: 12px; box-shadow: 0 10px 30px rgba(0,0,0,0.08); }
+    .back-link { display: inline-block; margin-bottom: 1rem; text-decoration: none; color: #005bbb; font-weight: 600; }
+    h1, h2, h3, h4 { color: #111; margin-top: 1.5rem; }
+    hr { margin: 2rem 0; border: none; border-top: 1px solid #eee; }
+    ul { padding-left: 1.5rem; }
+    pre { background: #f4f4f4; padding: 1rem; border-radius: 8px; overflow-x: auto; }
+    code { background: #f0f0f0; padding: 0.2rem 0.4rem; border-radius: 3px; font-family: 'Courier New', monospace; }
+    pre code { background: none; padding: 0; }
+    table { width: 100%; border-collapse: collapse; margin: 1rem 0; }
+    table th, table td { border: 1px solid #ddd; padding: 0.75rem; text-align: left; }
+    figure { margin: 1.5rem 0; }
+    figure img { width: 100%; border-radius: 8px; }
+    figure figcaption { font-size: 0.9rem; color: #666; margin-top: 0.5rem; text-align: center; }
+    blockquote { border-left: 4px solid #005bbb; padding-left: 1rem; margin: 1rem 0; color: #555; }
+  </style>
+</head>
+<body>
+  <main class="project-page">
+    <a class="back-link" href="../../index.html">&larr; Back to Home</a>
+    <article>
+<h1>北九州市スマートごみ分別システム 面接プロジェクト紹介</h1>
+
+<h2>プロジェクト概要</h2>
+
+<strong>プロジェクト名</strong>: Kita - 北九州市ごみ分別スマート質問応答システム  
+<strong>プロジェクトタイプ</strong>: RAG (Retrieval-Augmented Generation) 質問応答システム  
+<strong>開発期間</strong>: GMOインターンシッププロジェクト  
+<strong>チーム規模</strong>: 3名 (青木颯大、Yin Hanyang、安田大朗)  
+<strong>私の役割</strong>: [具体的な役割と責任を記入してください]
+
+<hr />
+
+<h2>プロジェクトの背景と目的</h2>
+
+<h3>ビジネス課題</h3>
+<ul>
+<li>北九州市のごみ分別ルールが複雑で、ユーザーが正確な情報を素早く取得することが困難</li>
+<li>町（地域）ごとにごみ収集日が異なり、検索が不便</li>
+<li>既存の検索方法は効率が悪く、ユーザー体験が悪い</li>
+</ul>
+
+<h3>ソリューション</h3>
+<p>RAGアーキテクチャに基づいたスマート質問応答システムを開発し、自然言語対話方式でユーザーに以下を提供：</p>
+<ul>
+<li>ごみ分別ルールの検索</li>
+<li>町名による収集日の検索</li>
+<li>カスタム知識ベースの拡張機能</li>
+</ul>
+
+<hr />
+
+<h2>システムアーキテクチャ設計</h2>
+
+<h3>技術スタック選定</h3>
+
+<strong>フロントエンド層</strong>
+<ul>
+<li><strong>Streamlit</strong>: インタラクティブなWebUIを迅速に構築</li>
+<li><strong>GPUモニタリング</strong>: NVML/nvidia-smiでリアルタイムリソース使用状況表示</li>
+</ul>
+
+<strong>バックエンド層</strong>
+<ul>
+<li><strong>FastAPI</strong>: 非同期APIフレームワーク、高い同時実行性をサポート</li>
+<li><strong>RESTful API</strong>: Blocking/Streamingデュアルモード応答</li>
+</ul>
+
+<strong>コアRAGエンジン</strong>
+<ul>
+<li><strong>ChromaDB</strong>: ベクトルデータベース、効率的なセマンティック検索をサポート</li>
+<li><strong>MeCab</strong>: 日本語形態素解析</li>
+<li><strong>Hybrid Grounding System v2.0</strong>: 自社開発のスマート品名認識システム</li>
+</ul>
+
+<strong>LLM推論</strong>
+<ul>
+<li><strong>Ollama</strong>: ローカル展開、データプライバシーを保証</li>
+<li><strong>Llama-3.1-Swallow-8B</strong>: 日本語最適化された大規模モデル</li>
+<li><strong>cl-nagoya-ruri-large</strong>: 日本語ベクトル化モデル</li>
+</ul>
+
+<h3>アーキテクチャのハイライト</h3>
+
+<pre><code>ユーザー入力 → Hybrid Grounding → ChromaDB検索 → RAG Prompt → LLM生成 → 結果返却
+             (スマート認識)        (マルチソース検索)                  (ストリーミング/ブロッキング)
+</code></pre>
+
+<strong>三層アーキテクチャ設計</strong>:
+<ul>
+<li><strong>プレゼンテーション層</strong> (Streamlit): Chat UI + ログ表示 + ファイルアップロード</li>
+<li><strong>ビジネス層</strong> (FastAPI): APIルーティング + RAGオーケストレーション + データ検証</li>
+<li><strong>データ層</strong> (ChromaDB): 分別ルール + 地域情報 + ユーザー知識ベース</li>
+</ul>
+
+<hr />
+
+<h2>コア技術イノベーション</h2>
+
+<h3>1. Hybrid Grounding System v2.0 (重点技術)</h3>
+
+<strong>課題</strong>: 従来のMeCab分かち書きは複雑なクエリ処理時の精度が不十分
+
+<strong>革新的ソリューション</strong>: 三層インテリジェント認識システム
+
+<h4>第一層：完全一致 (Exact Match)</h4>
+<ul>
+<li>入力が完全にデータベースと一致 → 信頼度1.0 → 即座に返却</li>
+<li>応答時間 < 5ms</li>
+</ul>
+
+<h4>第二層：スマートルーティング (Path Selection)</h4>
+<pre><code>if 入力長 < 20文字:
+    → Path A (高速パス): 全体Embedding検索
+    → 応答時間 < 300ms
+else:
+    → Path A + Path B (デュアルパス):
+       - Path A: 全体セマンティック検索
+       - Path B: LLM補助フレーズ抽出 + セグメント検索
+    → 応答時間 < 600ms
+</code></pre>
+
+<h4>第三層：信頼度評価 (Confidence Evaluation)</h4>
+<ul>
+<li><strong>High</strong> (≥0.70): 直接採用</li>
+<li><strong>Medium</strong> (0.45-0.70): ユーザーに提示</li>
+<li><strong>Low</strong> (<0.45): 自動的にMeCabへフォールバック</li>
+</ul>
+
+<h4>技術成果</h4>
+<ul>
+<li>精度向上：78% → 92%</li>
+<li>応答速度：平均 < 400ms</li>
+<li>自動エラー耐性：失敗時はMeCabへダウングレード</li>
+</ul>
+
+<h3>2. ストリーミング応答最適化</h3>
+
+<strong>課題</strong>: 従来のBlockingモードは待機時間が長く、ユーザー体験が悪い
+
+<strong>ソリューション</strong>:
+<ul>
+<li>Server-Sent Events (SSE) ストリーミング応答を実装</li>
+<li>トークンごとに返却、初回トークン時間(TTFB) < 1s</li>
+<li>フロントエンドでリアルタイムレンダリング、体感遅延が大幅に低減</li>
+</ul>
+
+<h3>3. マルチソース知識ベース統合</h3>
+
+<strong>3つの独立したCollection設計</strong>:
+<ul>
+<li><strong>gomi</strong>: ごみ分別ルール (静的データ)</li>
+<li><strong>area</strong>: 町名収集日 (静的データ)</li>
+<li><strong>knowledge</strong>: ユーザーアップロード知識 (動的拡張)</li>
+</ul>
+
+<strong>メリット</strong>:
+<ul>
+<li>検索精度がより高い（特化性が高い）</li>
+<li>知識ベースのホットアップデートをサポート</li>
+<li>権限管理とバージョン管理が容易</li>
+</ul>
+
+<hr />
+
+<h2>プロジェクト実装詳細</h2>
+
+<h3>RAG Pipeline詳解</h3>
+
+<pre><code># 1. クエリ理解
+query = "ノートパソコンを捨てたいのですが"
+
+<h1>2. Hybrid Groundingで品名抽出</h1>
+result = hybrid_grounding.extract(query)
+<h1>→ primary_candidate: "ノートパソコン"</h1>
+<h1>→ confidence: "high" (0.98)</h1>
+<h1>→ execution_time: 35ms</h1>
+
+<h1>3. マルチソース検索</h1>
+gomi_docs = chroma_gomi.query(embedding(候補品名), k=3)
+area_docs = chroma_area.query(embedding(町名), k=2)
+knowledge_docs = chroma_knowledge.query(embedding(query), k=2)
+
+<h1>4. コンテキスト構築</h1>
+context = format_rag_prompt(gomi_docs, area_docs, knowledge_docs)
+
+<h1>5. LLM生成</h1>
+response = ollama.generate(
+    model="swallow:latest",
+    prompt=context + query,
+    stream=True  # ストリーミング返却
+)
+</code></pre>
+
+<h3>データ構造設計</h3>
+
+<strong>ChromaDB Collection Schema</strong>:
+<pre><code># gomi collection
+{
+    "id": "gomi_001",
+    "document": "ノートパソコンは粗大ごみに出してください...",
+    "metadata": {
+        "item_name": "ノートパソコン",
+        "category": "粗大ごみ",
+        "source_file": "gomi_rules.pdf",
+        "page": 15
+    }
+}
+
+<h1>area collection</h1>
+{
+    "id": "area_001",
+    "document": "八幡東区の家庭ごみ収集日は月曜日と木曜日...",
+    "metadata": {
+        "town": "八幡東区",
+        "waste_type": "家庭ごみ",
+        "collection_days": ["月", "木"]
+    }
+}
+</code></pre>
+
+<h3>API設計</h3>
+
+<strong>Blockingモード</strong> - POST /api/bot/respond
+<pre><code>{
+  "message": "ノートパソコンを捨てたいのですが",
+  "user_id": "user123",
+  "stream": false
+}
+</code></pre>
+
+<strong>Streamingモード</strong> - POST /api/bot/respond_stream
+<pre><code>data: {"type": "token", "content": "ノート"}
+data: {"type": "token", "content": "パソコン"}
+...
+data: {"type": "done", "references": [...]}
+</code></pre>
+
+<hr />
+
+<h2>パフォーマンス指標</h2>
+
+<h3>応答パフォーマンス</h3>
+<ul>
+<li><strong>TTFB</strong> (初回トークン時間): 800ms</li>
+<li><strong>完全応答</strong>: 3-5秒 (回答の長さによる)</li>
+<li><strong>Hybrid Grounding</strong>: 35-600ms</li>
+<li><strong>ChromaDB検索</strong>: 50-150ms</li>
+</ul>
+
+<h3>精度指標</h3>
+<ul>
+<li><strong>品名認識精度</strong>: 92% (vs MeCab 78%)</li>
+<li><strong>分別ルール精度</strong>: 96%</li>
+<li><strong>地域情報精度</strong>: 99% (構造化データ)</li>
+</ul>
+
+<h3>システムリソース</h3>
+<ul>
+<li><strong>VRAM使用量</strong>: 6-8GB (8Bモデル)</li>
+<li><strong>CPU使用率</strong>: 20-40%</li>
+<li><strong>メモリ使用量</strong>: 4-6GB</li>
+</ul>
+
+<hr />
+
+<h2>開発プロセスと課題</h2>
+
+<h3>技術課題1: 日本語品名抽出の精度不足</h3>
+
+<strong>問題の説明</strong>:
+<ul>
+<li>MeCab分かち書きは長文と複合語の処理が不十分</li>
+<li>例："使わなくなったノートパソコン" → 抽出失敗</li>
+</ul>
+
+<strong>解決プロセス</strong>:
+<ul>
+<li>既存のNERソリューションを調査 → ごみ分別シーンに不適合</li>
+<li>純粋なEmbedding検索を試行 → 短いフレーズでは良好、長文では不十分</li>
+<li>Hybridソリューションを設計 → 全体検索とLLM抽出を組み合わせ</li>
+<li>自動Fallbackを実装 → ロバスト性を保証</li>
+</ul>
+
+<strong>結果</strong>: 精度が78%から92%に向上
+
+<h3>技術課題2: ストリーミング応答のカクツキ</h3>
+
+<strong>問題</strong>: フロントエンドレンダリングがカクつく、トークン蓄積
+
+<strong>ソリューション</strong>:
+<ul>
+<li>バックエンドでBuffer サイズを調整</li>
+<li>フロントエンドで<code>useEffect</code> + <code>useState</code>非同期更新を使用</li>
+<li>ハートビート検出メカニズムを追加</li>
+</ul>
+
+<h3>技術課題3: ChromaDBパフォーマンス最適化</h3>
+
+<strong>最適化施策</strong>:
+<ul>
+<li>Collectionを分離 (gomi/area/knowledge)</li>
+<li><code>n_results</code>パラメータを調整 (3-5個)</li>
+<li>Metadataフィルタリングを追加して無効な結果を削減</li>
+<li>永続化モードを使用して再ロードを回避</li>
+</ul>
+
+<hr />
+
+<h2>プロジェクトで得た学び</h2>
+
+<h3>技術成長</h3>
+<ul>
+<li><strong>RAGアーキテクチャ理解</strong>: 理論から実践まで、検索拡張生成を深く理解</li>
+<li><strong>ベクトルデータベース</strong>: ChromaDBの使用と最適化をマスター</li>
+<li><strong>LLMアプリケーション</strong>: Promptエンジニアリング、Streaming実装を習得</li>
+<li><strong>フルスタック開発</strong>: FastAPIバックエンド + Streamlitフロントエンドの完全実装</li>
+<li><strong>パフォーマンス最適化</strong>: ボトルネック特定、指標定量化、反復改善</li>
+</ul>
+
+<h3>エンジニアリング能力</h3>
+<ul>
+<li><strong>システム設計</strong>: モジュール化設計、階層アーキテクチャ、インターフェース定義</li>
+<li><strong>コード品質</strong>: Pydanticデータ検証、型ヒント、例外処理</li>
+<li><strong>ドキュメント能力</strong>: アーキテクチャドキュメント、APIドキュメント、README作成</li>
+<li><strong>チーム協業</strong>: Gitバージョン管理、コードレビュー、タスク分担</li>
+</ul>
+
+<h3>ビジネス理解</h3>
+<ul>
+<li><strong>要件分析</strong>: ユーザーの課題から出発してソリューションを設計</li>
+<li><strong>ユーザー体験</strong>: ストリーミング応答、信頼度提示、ログの透明化</li>
+<li><strong>拡張性</strong>: ユーザーによる知識ベースアップロードをサポート、システムの継続的な反復</li>
+</ul>
+
+<hr />
+
+
+    </article>
+  </main>
+</body>
+</html>

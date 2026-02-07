@@ -1,0 +1,316 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Architecture Design Planning AI Assistant System  </title>
+  <link rel="stylesheet" href="../../style.css" />
+  <style>
+    body { font-family: 'Inter', 'Noto Sans JP', sans-serif; line-height: 1.7; background: #fafafa; color: #222; }
+    .project-page { max-width: 900px; margin: 2rem auto; padding: 2rem; background: #fff; border-radius: 12px; box-shadow: 0 10px 30px rgba(0,0,0,0.08); }
+    .back-link { display: inline-block; margin-bottom: 1rem; text-decoration: none; color: #005bbb; font-weight: 600; }
+    h1, h2, h3, h4 { color: #111; margin-top: 1.5rem; }
+    hr { margin: 2rem 0; border: none; border-top: 1px solid #eee; }
+    ul { padding-left: 1.5rem; }
+    pre { background: #f4f4f4; padding: 1rem; border-radius: 8px; overflow-x: auto; }
+    code { background: #f0f0f0; padding: 0.2rem 0.4rem; border-radius: 3px; font-family: 'Courier New', monospace; }
+    pre code { background: none; padding: 0; }
+    table { width: 100%; border-collapse: collapse; margin: 1rem 0; }
+    table th, table td { border: 1px solid #ddd; padding: 0.75rem; text-align: left; }
+    figure { margin: 1.5rem 0; }
+    figure img { width: 100%; border-radius: 8px; }
+    figure figcaption { font-size: 0.9rem; color: #666; margin-top: 0.5rem; text-align: center; }
+    blockquote { border-left: 4px solid #005bbb; padding-left: 1rem; margin: 1rem 0; color: #555; }
+  </style>
+</head>
+<body>
+  <main class="project-page">
+    <a class="back-link" href="../../index.html">&larr; Back to Home</a>
+    <article>
+<h1>Architecture Design Planning AI Assistant System  </h1>
+<strong>Architecture Design Planning AI Assistant</strong>
+
+<p>Author: Hanyang Yin  </p>
+<p>Role: Product Design / System Architecture / Core Developer  </p>
+
+<p>Keywords: LLM · RAG · OCR · PPT Generation · AWS · Docker · AI Agent</p>
+
+<hr />
+
+<h2>Project Overview</h2>
+
+<p>This project is an intelligent assistance system designed for the early-stage architectural planning process. By integrating large language models, multi-source knowledge retrieval, automated content generation, and image generation technologies, the system provides end-to-end support from requirement analysis and concept development to final deliverable production.</p>
+
+<p>The system primarily targets architects, architecture students, and planning professionals, aiming to lower the entry barrier for planning tasks while improving efficiency and professional quality.</p>
+
+<blockquote>Core Goal: Enable non-expert users to construct professional-level architectural planning proposals.</blockquote>
+
+<hr />
+
+<h2>System Architecture</h2>
+
+<p>!<a href="images/system_arch.png">System Architecture</a></p>
+
+<blockquote>Figure 1: Overall system architecture</blockquote>
+
+<p>The system adopts a layered architecture consisting of frontend interaction, middleware orchestration, intelligent engines, and multi-source databases.</p>
+
+<p>Main components include:</p>
+
+<ul>
+<li>Web Frontend (User Interface)</li>
+<li>API Gateway (Service Orchestration)</li>
+<li>LLM Service (Large Language Model Service)</li>
+<li>RAG Engine (Knowledge Augmentation Module)</li>
+<li>OCR Service (Image Analysis Module)</li>
+<li>Storage Layer (Multi-type Databases)</li>
+</ul>
+
+<hr />
+
+<h2>🔹 Module 1: Multi-Knowledge-Base Intelligent QA System (RAG-based Chat System)</h2>
+
+<h3>Description</h3>
+
+<p>This module integrates the Gemini large language model with RAG technology to provide high-precision question-answering services specialized for the architectural domain.</p>
+
+<p>Connected knowledge bases include:</p>
+
+<ul>
+<li>Architectural Case Database (Large-scale public building cases)</li>
+<li>Building Codes and Regulations Database</li>
+<li>Architectural Knowledge Base (Team-curated materials)</li>
+</ul>
+
+<h3>System Flow</h3>
+
+<pre><code>
+User Query
+↓
+Intent Recognition
+↓
+Knowledge Retrieval
+↓
+RAG Fusion
+↓
+LLM Generation
+↓
+Final Answer
+
+</code></pre>
+
+<h3>Interface Example</h3>
+
+<p>!<a href="images/chat_ui.png">Chat UI</a></p>
+
+<blockquote>Figure 2: RAG-based QA interface</blockquote>
+
+<h3>Technical Highlights</h3>
+
+<ul>
+<li>Dynamic routing across multiple knowledge bases</li>
+<li>Semantic intent classification</li>
+<li>Vector-based retrieval and document re-ranking</li>
+<li>Hallucination mitigation mechanisms</li>
+</ul>
+
+<hr />
+
+<h2>🔹 Module 2: Architectural Planning Proposal Generator (PPT Generator)</h2>
+
+<h3>Description</h3>
+
+<p>This module assists users in building complete architectural planning proposals from scratch and outputs editable PPT documents.</p>
+
+<p>Core Concept: <strong>Interactive Guidance + Case-Based Reference + Intelligent Generation</strong></p>
+
+<h3>Workflow</h3>
+
+<ul>
+<li>Requirement collection (dialog-based guidance)</li>
+<li>Site analysis (Map API integration)</li>
+<li>Case matching</li>
+<li>Preference selection</li>
+<li>Outline generation</li>
+<li>Manual editing</li>
+<li>Automatic PPT generation</li>
+</ul>
+
+<h3>Process Diagram</h3>
+
+<p>!<a href="images/ppt_flow.png">PPT Flow</a></p>
+
+<blockquote>Figure 3: Planning generation workflow</blockquote>
+
+<h3>Editing Interface</h3>
+
+<p>!<a href="images/ppt_editor.png">PPT Editor</a></p>
+
+<blockquote>Figure 4: Online PPT editor</blockquote>
+
+<h3>Prompt Design Strategy</h3>
+
+<ul>
+<li>Hierarchical prompt structure</li>
+<li>Page-level prompting</li>
+<li>Role-based prompting</li>
+<li>Constraint-based output templates</li>
+</ul>
+
+<hr />
+
+<h2>🔹 Module 3: Architectural Visualization Generation System (Image Generation)</h2>
+
+<h3>Description</h3>
+
+<p>This module integrates multiple image generation APIs to produce architectural visualizations based on user input.</p>
+
+<p>Currently supported:</p>
+
+<ul>
+<li>NanoBana API</li>
+<li>[Other Image Generation APIs]</li>
+</ul>
+
+<p>Future directions:</p>
+
+<ul>
+<li>Domain-specific model fine-tuning</li>
+<li>Multi-view image generation</li>
+<li>Structural consistency constraints</li>
+</ul>
+
+<h3>Example Outputs</h3>
+
+<p>!<a href="images/image_gen.png">Image Generation</a></p>
+
+<blockquote>Figure 5: Generated architectural visualizations</blockquote>
+
+<hr />
+
+<h2>Key Module: CAD-Based Building Code Intelligent Parsing System (Independent Development)</h2>
+
+<h3>Background</h3>
+
+<p>Traditional building code retrieval relies on manual page searching, resulting in low efficiency and high error rates.</p>
+
+<p>This module enables:</p>
+
+<blockquote>CAD Screenshot → Automatic Code Page Localization → Instant PDF Retrieval</blockquote>
+
+<h3>System Flow</h3>
+
+<pre><code>
+PDF Preprocess → OCR Indexing → Page Database
+↑
+CAD Screenshot → OCR + LLM → Code Extraction
+↓
+Page Matching
+↓
+PDF Return
+
+</code></pre>
+
+<h3>Interface Example</h3>
+
+<p>!<a href="images/cad_query.png">CAD Query</a></p>
+
+<blockquote>Figure 6: CAD parsing interface</blockquote>
+
+<h3>Core Technologies</h3>
+
+<ul>
+<li>Batch OCR-based PDF segmentation</li>
+<li>Multi-strategy text recognition fusion</li>
+<li>Code numbering rule modeling</li>
+<li>High-robustness indexing structure</li>
+<li>API-oriented service design</li>
+</ul>
+
+<h3>Engineering Implementation</h3>
+
+<ul>
+<li>Docker-based containerization</li>
+<li>Deployment on AWS EC2</li>
+<li>RESTful API design</li>
+<li>Automated logging and monitoring</li>
+</ul>
+
+<hr />
+
+<h2>Role and Contributions</h2>
+
+<p>In this project, I primarily focused on product planning and system architecture design, while also developing several core technical modules.</p>
+
+<h3>Main Responsibilities</h3>
+
+<ul>
+<li>Overall system architecture design</li>
+<li>UX and workflow planning</li>
+<li>RAG-based QA framework construction</li>
+<li>PPT generation pipeline design</li>
+<li>Prompt engineering framework development</li>
+<li>Independent development of CAD parsing module</li>
+<li>Cloud deployment and API design</li>
+</ul>
+
+<h3>Key Contributions</h3>
+
+<ul>
+<li>Transformed complex architectural workflows into automated systems</li>
+<li>Enabled production-level deployment of AI services</li>
+<li>Built scalable and extensible technical infrastructure</li>
+</ul>
+
+<hr />
+
+<h2>🛠️ Technology Stack</h2>
+
+<p>| Category | Technology |</p>
+<p>|----------|------------|</p>
+<p>| LLM | Gemini |</p>
+<p>| RAG | FAISS / Chroma |</p>
+<p>| OCR | PaddleOCR / Custom |</p>
+<p>| Backend | FastAPI |</p>
+<p>| Frontend | React / Vue |</p>
+<p>| Cloud | AWS EC2 |</p>
+<p>| Deploy | Docker |</p>
+<p>| DB | PostgreSQL / S3 / VectorDB |</p>
+
+<hr />
+
+<h2>Technical Challenges and Solutions</h2>
+
+<h3>1. Unstable RAG Accuracy</h3>
+
+<p>Issue: High retrieval noise  </p>
+<p>Solution: Multi-stage filtering and re-ranking</p>
+
+<h3>2. OCR Recognition Errors</h3>
+
+<p>Issue: Complex CAD text structures  </p>
+<p>Solution: OCR + LLM-based correction fusion</p>
+
+<h3>3. Incomplete User Requirements</h3>
+
+<p>Issue: Missing critical information  </p>
+<p>Solution: Multi-turn guided dialogue design</p>
+
+<hr />
+
+<h2>Future Work</h2>
+
+<ul>
+<li>Development of architecture-specific generative models</li>
+<li>Multimodal collaborative design</li>
+<li>BIM system integration</li>
+<li>Enterprise-level deployment optimization</li>
+</ul>
+
+<hr />
+<p>```</p>
+
+    </article>
+  </main>
+</body>
+</html>

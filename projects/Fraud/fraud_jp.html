@@ -1,0 +1,206 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>不正取引検出のための機械学習プロジェクト  </title>
+  <link rel="stylesheet" href="../../style.css" />
+  <style>
+    body { font-family: 'Inter', 'Noto Sans JP', sans-serif; line-height: 1.7; background: #fafafa; color: #222; }
+    .project-page { max-width: 900px; margin: 2rem auto; padding: 2rem; background: #fff; border-radius: 12px; box-shadow: 0 10px 30px rgba(0,0,0,0.08); }
+    .back-link { display: inline-block; margin-bottom: 1rem; text-decoration: none; color: #005bbb; font-weight: 600; }
+    h1, h2, h3, h4 { color: #111; margin-top: 1.5rem; }
+    hr { margin: 2rem 0; border: none; border-top: 1px solid #eee; }
+    ul { padding-left: 1.5rem; }
+    pre { background: #f4f4f4; padding: 1rem; border-radius: 8px; overflow-x: auto; }
+    code { background: #f0f0f0; padding: 0.2rem 0.4rem; border-radius: 3px; font-family: 'Courier New', monospace; }
+    pre code { background: none; padding: 0; }
+    table { width: 100%; border-collapse: collapse; margin: 1rem 0; }
+    table th, table td { border: 1px solid #ddd; padding: 0.75rem; text-align: left; }
+    figure { margin: 1.5rem 0; }
+    figure img { width: 100%; border-radius: 8px; }
+    figure figcaption { font-size: 0.9rem; color: #666; margin-top: 0.5rem; text-align: center; }
+    blockquote { border-left: 4px solid #005bbb; padding-left: 1rem; margin: 1rem 0; color: #555; }
+  </style>
+</head>
+<body>
+  <main class="project-page">
+    <a class="back-link" href="../../index.html">&larr; Back to Home</a>
+    <article>
+<h1>不正取引検出のための機械学習プロジェクト  </h1>
+<strong>Fraud Detection with Machine Learning</strong>
+
+<hr />
+
+<h2>1. プロジェクト背景と目的</h2>
+
+<p>本プロジェクトは、実業務における<strong>不正取引（Fraud）検出</strong>を目的とした機械学習モデルの開発を行ったものである。  </p>
+<p>不正取引は発生頻度が極めて低く、かつ行動パターンが複雑で時間とともに変化するため、ルールベースや単一モデルでは安定した性能を得ることが難しい。</p>
+
+<p>本プロジェクトでは、業務構造に基づいた特徴量設計、分人群モデリング戦略、およびアンサンブル手法を組み合わせることで、全体および重要なユーザー群における検出性能の向上を目指した。</p>
+
+<hr />
+
+<h2>2. データの特徴と課題</h2>
+
+<p>使用した取引データには、以下のような実務特有の課題が存在する。</p>
+
+<ul>
+<li><strong>クラス不均衡</strong>：不正取引の割合が極めて低い  </li>
+<li><strong>欠損値の存在</strong>：一部の特徴量は条件付きでのみ観測可能  </li>
+<li><strong>時系列依存性</strong>：ユーザー・店舗の過去行動が現在の取引に強く影響  </li>
+<li><strong>ユーザー・店舗の異質性</strong>：新規ユーザーと既存ユーザー、店舗・地域ごとのリスク分布が大きく異なる  </li>
+</ul>
+
+<p>これらの特性を踏まえ、本プロジェクトではモデルの複雑化よりも<strong>適切なモデリング分割と特徴設計</strong>を重視した。</p>
+
+<hr />
+
+<h2>3. 特徴量エンジニアリング（Feature Engineering）</h2>
+
+<h3>3.1 購入者（ユーザー）レベルの特徴</h3>
+
+<p>暗号化された Address 情報により購入者を一意に識別できるため、ユーザー単位での履歴分析が可能である。</p>
+
+<strong>基本方針：購入履歴の有無によるユーザー分割</strong>
+
+<ul>
+<li>初回購入ユーザー（New User）  </li>
+<li>購入履歴を持つユーザー（Long-time User）  </li>
+</ul>
+
+<p>購入履歴を持つユーザーに対しては、以下の特徴量を構築した。</p>
+
+<ul>
+<li>過去の購入回数  </li>
+<li>現在の購入デバイスと過去デバイスの一致性  </li>
+<li>現在の取引金額が過去平均からどの程度乖離しているか  </li>
+<li>行動パターンの変化を表す指標  </li>
+</ul>
+
+<p>これらは「行動の一貫性」を捉える特徴として、不正検出に有効である。</p>
+
+<hr />
+
+<h3>3.2 店舗（Merchant / Store）レベルの特徴</h3>
+
+<p>取引単位の情報に加え、店舗自体のリスク特性を表す特徴量を導入した。</p>
+
+<ul>
+<li>店舗の過去不正取引率  </li>
+<li>歴史的な取引金額規模  </li>
+<li><code>store_device_diversity</code>（使用デバイスの多様性）  </li>
+</ul>
+
+<p>これにより、店舗固有のリスク傾向をモデルに反映させた。</p>
+
+<hr />
+
+<h2>4. 分人群モデリング戦略（User Segmentation Modeling）</h2>
+
+<p>新規ユーザーと既存ユーザーでは、利用可能な情報量と行動の安定性が本質的に異なる。  </p>
+<p>そのため、本プロジェクトでは<strong>明示的な分人群モデリング</strong>を採用した。</p>
+
+<h3>4.1 モデリング方針</h3>
+
+<ul>
+<li>過去取引履歴に基づいてユーザーを分類  </li>
+<li>初回購入ユーザー / 購入履歴ユーザーでデータを分割  </li>
+<li>各人群ごとにモデル性能を評価  </li>
+<li>学習・検証は時間順を厳守し、情報漏洩（Time Leakage）を防止  </li>
+</ul>
+
+<h3>4.2 分人群モデリングの概念図</h3>
+
+<p>!<a href="A_flowchart_infographic_explains_a_user_segmentati.png">User Segmentation Modeling Strategy</a></p>
+
+<hr />
+
+<h2>5. モデル選択</h2>
+
+<p>以下のモデルを比較・検証した。</p>
+
+<ul>
+<li><strong>CatBoost（主モデル）</strong>  </li>
+<li>XGBoost  </li>
+<li>Random Forest  </li>
+<li>MLP / Transformer（検証目的）  </li>
+</ul>
+
+<p>欠損値処理、カテゴリ特徴の扱いやすさ、学習安定性を考慮し、最終的に <strong>CatBoost</strong> を中心に採用した。</p>
+
+<hr />
+
+<h2>6. ハイパーパラメータ調整</h2>
+
+<p>CatBoost に対して系統的なハイパーパラメータチューニングを実施し、重要度分析を行った。</p>
+
+<p>主な知見は以下の通り。</p>
+
+<ul>
+<li><code>learning_rate</code> が性能に最も大きく影響  </li>
+<li><code>scale_pos_weight</code> はクラス不均衡下での F1-score 改善に重要  </li>
+<li>木の深さや反復回数は汎化性能と安定性に寄与  </li>
+</ul>
+
+<p>これにより、効率的かつ解釈可能なチューニング方針を確立した。</p>
+
+<hr />
+
+<h2>7. アンサンブル学習</h2>
+
+<p>単一モデルに加え、<strong>AutoGluon</strong> を用いたアンサンブルを実施。</p>
+
+<ul>
+<li>複数モデルの予測を自動統合  </li>
+<li>モデルの頑健性向上  </li>
+<li>最終性能評価の比較対象として活用  </li>
+</ul>
+
+<hr />
+
+<h2>8. 実験結果（F1-score）</h2>
+
+<h3>8.1 全体モデル</h3>
+
+<ul>
+<li>F1 score：<strong>0.31 → 0.50</strong></li>
+</ul>
+
+<h3>8.2 分人群別結果</h3>
+
+<p>| ユーザー種別 | 改善前 | 改善後 |</p>
+<p>|---|---|---|</p>
+<p>| 購入履歴あり | 0.44 | <strong>0.60</strong> |</p>
+<p>| 購入履歴なし | 0.18 | <strong>0.30</strong> |</p>
+
+<p>結果より、以下が確認できた。</p>
+
+<ul>
+<li>履歴特徴は不正取引検出において極めて重要  </li>
+<li>新規ユーザーは依然として難易度が高いが、分人群モデリングにより改善  </li>
+<li>全体指標だけでなく人群別評価が業務価値を正しく反映する  </li>
+</ul>
+
+<hr />
+
+<h2>9. まとめ</h2>
+
+<p>本プロジェクトでは、</p>
+
+<ul>
+<li>業務仮説に基づく特徴量設計  </li>
+<li>不均衡データを前提としたモデリング戦略  </li>
+<li>新規 / 既存ユーザーの分人群モデリング  </li>
+<li>CatBoost とアンサンブルによる安定した学習  </li>
+</ul>
+
+<p>を組み合わせることで、実務適用可能な不正取引検出モデルを構築した。  </p>
+<p>本手法は、店舗別・地域別・時間帯別などへの拡張も容易である。</p>
+
+<hr />
+
+    </article>
+  </main>
+</body>
+</html>
