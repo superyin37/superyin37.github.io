@@ -1,0 +1,215 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>Research | Hanyang Yin</title>
+  <link rel="stylesheet" href="../style.css" />
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600&family=Noto+Sans+JP:wght@400;600&display=swap" rel="stylesheet">
+  <style>
+    .lang-toggle {
+      background: #FFB800;
+      border: none;
+      padding: 0.4rem 0.8rem;
+      border-radius: 4px;
+      cursor: pointer;
+      font-weight: 600;
+    }
+    .lang-section { display: none; }
+    .lang-section.active { display: block; }
+
+    .math {
+      background: #f8f9fa;
+      border-left: 4px solid #2B3A67;
+      padding: 0.6rem 0.8rem;
+      margin: 0.8rem 0;
+      font-family: ui-monospace, SFMono-Regular, Consolas, "Noto Sans JP", monospace;
+      white-space: pre-wrap;
+      font-size: 0.9rem;
+      line-height: 1.6;
+    }
+
+    .img-box {
+      margin-top: 1rem;
+      text-align: center;
+    }
+    .img-box img {
+      max-width: 100%;
+      border-radius: 8px;
+      box-shadow: 0 1px 6px rgba(0,0,0,0.15);
+    }
+    .img-caption {
+      font-size: 0.9rem;
+      color: #555;
+      margin-top: 0.3rem;
+    }
+    section h3 { margin-top: 1.5rem; }
+  </style>
+</head>
+
+<body>
+  <nav>
+    <div class="logo">HANYANG YIN</div>
+    <ul class="nav-links">
+      <li><a href="../index.html">Home</a></li>
+    </ul>
+    <button id="lang-toggle" class="lang-toggle">日本語</button>
+  </nav>
+
+  <section class="hero">
+    <h1><span class="highlight">Research Overview</span></h1>
+    <p>Causal Discovery via Continuous Optimization and Coordinate Descent</p>
+  </section>
+
+  <!-- ======= English Section ======= -->
+  <section id="en" class="lang-section active">
+    <h2>Keywords</h2>
+    <div class="card">
+      Causal Inference, Causal Discovery, Continuous Optimization, Graph Structure Learning, Sparse Modeling
+    </div>
+
+    <h2>Research Background</h2>
+    <div class="card">
+      Traditional statistical analysis and machine learning primarily focus on revealing <em>correlations</em> among variables. However, for understanding complex socio-economic or biological phenomena, as well as for policy design and decision-making support, it is essential to identify the <em>causal relationships</em> underlying the data.<br><br>
+      Within this context, <strong>causal inference</strong> aims to estimate intervention and counterfactual effects, while <strong>causal discovery</strong> seeks to estimate causal structures (directed acyclic graphs; DAGs) directly from observational data.<br><br>
+      Recently, approaches that formulate causal discovery as a <strong>continuous optimization problem</strong>—notably exemplified by NOTEARS—have attracted much attention. These methods relax the combinatorial search of DAGs into a differentiable optimization framework. However, most existing approaches employ an L₁-norm penalty to promote sparsity, which has been shown to <strong>lack consistency over the Markov equivalence class</strong> of the true graph. Conversely, the L₀-norm penalty offers theoretical consistency but is non-continuous and thus difficult to optimize via gradient-based methods.
+    </div>
+
+    <h2>Research Objective</h2>
+    <div class="card">
+      The goal of this study is to overcome the above theoretical and computational limitations by developing a <strong>new causal discovery algorithm that guarantees consistency and scalability to high-dimensional data</strong>, while maintaining high computational efficiency and accuracy.<br><br>
+      Specifically, the research explores two complementary approaches:
+      <ol>
+        <li><strong>A continuous optimization approach</strong> using a <em>Gumbel-Softmax relaxation</em> of the L₀-norm to enable smooth and differentiable optimization while preserving theoretical consistency.</li>
+        <li><strong>A coordinate descent–based approach</strong>, which explicitly enforces acyclicity and sparsity through iterative edge-wise updates under DAG constraints.</li>
+      </ol>
+    </div>
+
+    <h2>Research Content</h2>
+    <div class="card">
+      <h3>1. Gumbel-Softmax SGD Approach</h3>
+      In this approach, the existence of each edge is parameterized via a <strong>Gumbel-Softmax gate</strong>, where the temperature parameter τ is gradually annealed to transition from continuous probabilities to discrete graph structures.<br><br>
+      The loss function is defined as:
+      <div class="math">
+\[
+\mathcal{L}(B)
+= -2 \log\det(B+\delta I)
++ \operatorname{tr}(B^\top \hat{R} B)
++ \lambda \sum_{i\neq j} g_{ij}
+\]
+      </div>
+      where the first term enforces stability (invertibility), the second ensures data fitting, and the third promotes sparsity.<br>
+      Model parameters (U, P) are updated using <strong>stochastic gradient descent (SGD)</strong> with momentum, and after convergence, binarization and cycle removal yield the final acyclic structure.<br><br>
+      This approach effectively bridges L₀-like sparsity and continuous differentiability, allowing efficient structure learning through gradient-based optimization.
+      <div class="img-box">
+        <img src="gumbel.png" alt="Gumbel-Softmax SGD Approach Illustration">
+        <div class="img-caption">Figure 1. Conceptual diagram of Gumbel-Softmax SGD-based causal discovery.</div>
+      </div>
+
+      <h3>2. Coordinate Descent Approach</h3>
+      As a complementary direction, this study also develops a <strong>coordinate descent–based causal discovery algorithm</strong>.<br><br>
+      At each iteration, an edge (i, j) is selected, and if the updated matrix A + δE<sub>ij</sub> satisfies the DAG constraint, the optimal update
+      <div class="math">
+\[
+\delta^* = \arg\min_\delta f(A + \delta E_{ij})
+\]
+      </div>
+      is computed analytically.<br>
+      This localized update strategy preserves acyclicity and sparsity during optimization and naturally stabilizes the graph structure.<br><br>
+      By incorporating L₀-type regularization and adaptive thresholding, the method achieves consistent structure recovery under explicit graph constraints—offering a contrast to the probabilistic relaxation in the Gumbel-Softmax framework.<br><br>
+      Through comparative analysis of these two approaches, the research aims to establish a <strong>unified optimization framework</strong> that balances theoretical consistency, computational efficiency, and sparsity for large-scale causal discovery.
+      <div class="img-box">
+        <img src="coordinate.png" alt="Coordinate Descent Approach Illustration">
+        <div class="img-caption">Figure 2. Iterative update process in Coordinate Descent-based causal discovery.</div>
+      </div>
+    </div>
+
+    <h2>Implementation and Tools</h2>
+    <div class="card">
+      Python, PyTorch, NumPy, SciPy, NetworkX, Matplotlib<br>
+      (Experimental setup includes GPU-based computation, PyTorch automatic differentiation, and NetworkX for DAG verification.)
+    </div>
+  </section>
+
+  <!-- ======= Japanese Section ======= -->
+  <section id="ja" class="lang-section jp">
+    <h2>キーワード</h2>
+    <div class="card">因果推論、因果探索、連続最適化、グラフ構造学習、スパースモデリング</div>
+
+    <h2>研究背景</h2>
+    <div class="card">
+      従来の統計解析や機械学習は変数間の「相関関係」を明らかにすることに重点を置いてきたが、複雑な社会・経済・生物学的現象の理解、政策立案、意思決定支援においては、変数間の「因果関係」を明確に把握することが不可欠である。<br><br>
+      この文脈において、<strong>因果推論</strong>は介入効果や反事実の推定を行う一方で、<strong>因果探索</strong>は観測データのみから因果構造（有向非巡回グラフ：DAG）を推定することを目的とする。<br><br>
+      近年、因果探索を<strong>連続最適化問題</strong>として定式化し、勾配に基づく最適化で解く手法（例：NOTEARS）が注目されている。しかし、多くの既存手法ではスパース性を誘導するためにL₁ノルムが用いられており、これは真の因果グラフの<strong>マルコフ同値類上で一貫性を持たない</strong>ことが指摘されている。一方でL₀ノルムは理論的一貫性を保証するものの、非連続であるために勾配最適化が困難であるという課題が残る。
+    </div>
+
+    <h2>研究目的</h2>
+    <div class="card">
+      本研究の目的は、上記の理論的・計算的課題を克服し、<strong>高次元データに対しても一貫性保証と計算効率を両立する新しい因果探索アルゴリズム</strong>を開発することである。<br><br>
+      特に、L₀ノルムを<strong>Gumbel-Softmax</strong>などの連続近似で滑らかに緩和し、確率的ゲーティングを通じてスパース構造を学習する一方、別のアプローチとして<strong>座標降下法（Coordinate Descent）</strong>を用いた逐次最適化により、グラフの疎性と非巡回制約を直接的に満たすアルゴリズムを検討している。
+    </div>
+
+    <h2>研究内容</h2>
+    <div class="card">
+      <h3>1. Gumbel-Softmax SGD アプローチ</h3>
+      本手法では、各辺の存在確率を<strong>Gumbel-Softmax分布</strong>でパラメータ化し、温度パラメータ τ を段階的に減少させることで、連続的な確率表現から離散的な因果構造へと収束させる。<br><br>
+      損失関数は以下で定義される：
+      <div class="math">
+\[
+\mathcal{L}(B)
+= -2 \log\det(B+\delta I)
++ \operatorname{tr}(B^\top \hat{R} B)
++ \lambda \sum_{i\neq j} g_{ij}
+\]
+      </div>
+      第一項は可逆性・安定性、第二項はデータ適合度、第三項はスパース性を表す。<br><br>
+      パラメータ $(U,P)$ をSGDで更新し、学習後にしきい値処理とサイクル除去を行うことで、最終的な<strong>非巡回グラフ構造</strong>を得る。<br><br>
+      本アプローチは連続最適化に基づきつつ、確率的離散化を導入することで、L₀ノルムに近いスパース性と滑らかな勾配更新を両立する特徴を持つ。
+      <div class="img-box">
+        <img src="gumbel.png" alt="Gumbel-Softmax SGD アプローチ 図">
+        <div class="img-caption">図1. Gumbel-Softmax SGDによる因果探索の概念図。</div>
+      </div>
+
+      <h3>2. Coordinate Descent アプローチ</h3>
+      一方、もう一つの方向性として<strong>座標降下法に基づく因果探索</strong>を開発している。<br><br>
+      この手法では、各エッジ $(i,j)$ を逐次的に選択し、更新後の行列 $A+\delta E_{ij}$ がDAG制約を満たす場合に限り、
+      <div class="math">
+\[
+\delta^* = \arg\min_\delta f(A + \delta E_{ij})
+\]
+      </div>
+      を解析的に求めて関数値を改善する。<br><br>
+      各更新は局所的だが、<strong>非巡回制約を逐次確認しつつ</strong>最適化が進むため、グラフ構造のスパース性と安定性を自然に維持できる。<br><br>
+      また、L₀型ペナルティの導入や閾値調整を組み合わせることで、Gumbel-Softmax SGDとは異なる形で一貫性を確保しつつ、より明示的な構造制約下での最適化を可能にしている。<br><br>
+      これら二つのアプローチの比較を通じ、連続最適化と組合せ最適化の橋渡しを行い、理論的一貫性・計算効率・スパース性のバランスを最適化する新しい枠組みの確立を目指している。
+      <div class="img-box">
+        <img src="coordinate.png" alt="Coordinate Descent アプローチ 図">
+        <div class="img-caption">図2. 座標降下法に基づく因果探索アルゴリズムの反復更新プロセス。</div>
+      </div>
+    </div>
+
+    <h2>実装言語・使用ツール等</h2>
+    <div class="card">
+      Python、PyTorch、NumPy、SciPy、NetworkX、Matplotlib<br>
+      （実験環境：GPU 搭載計算機、PyTorch による自動微分・勾配更新、NetworkX によるDAG 判定）
+    </div>
+  </section>
+
+  <footer>
+    © 2025 Hanyang Yin — University of Tokyo
+  </footer>
+
+  <script>
+    const btn = document.getElementById('lang-toggle');
+    const en = document.getElementById('en');
+    const ja = document.getElementById('ja');
+    btn.addEventListener('click', () => {
+      const isEN = en.classList.contains('active');
+      en.classList.toggle('active', !isEN);
+      ja.classList.toggle('active', isEN);
+      btn.textContent = isEN ? 'English' : '日本語';
+    });
+  </script>
+</bod
+
+

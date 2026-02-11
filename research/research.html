@@ -6,44 +6,96 @@
   <title>Research | Hanyang Yin</title>
   <link rel="stylesheet" href="../style.css" />
   <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600&family=Noto+Sans+JP:wght@400;600&display=swap" rel="stylesheet">
+  <script src="https://polyfill.io/v3/polyfill.min.js?features=es6"></script>
+  <script id="MathJax-script" async src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js"></script>
   <style>
+    :root {
+      --primary-color: #2B3A67;
+      --accent-color: #FFB800;
+      --bg-light: #f8f9fa;
+      --text-main: #333;
+    }
+
+    body { font-family: 'Inter', 'Noto Sans JP', sans-serif; color: var(--text-main); line-height: 1.6; }
+
+    /* Language Toggle */
     .lang-toggle {
-      background: #FFB800;
+      background: var(--accent-color);
       border: none;
-      padding: 0.4rem 0.8rem;
+      padding: 0.5rem 1rem;
       border-radius: 4px;
       cursor: pointer;
       font-weight: 600;
+      transition: opacity 0.2s;
     }
+    .lang-toggle:hover { opacity: 0.9; }
     .lang-section { display: none; }
     .lang-section.active { display: block; }
 
+    /* Layout Components */
+    .card {
+      background: #fff;
+      border: 1px solid #eaeaea;
+      padding: 1.5rem;
+      border-radius: 8px;
+      margin-bottom: 2rem;
+      box-shadow: 0 2px 4px rgba(0,0,0,0.05);
+    }
+    h2 { border-bottom: 2px solid var(--primary-color); padding-bottom: 0.3rem; margin-top: 2.5rem; }
+    h3 { color: var(--primary-color); margin-top: 1.5rem; border-left: 4px solid var(--accent-color); padding-left: 0.8rem;}
+
+    /* Math Styling */
     .math {
-      background: #f8f9fa;
-      border-left: 4px solid #2B3A67;
-      padding: 0.6rem 0.8rem;
-      margin: 0.8rem 0;
-      font-family: ui-monospace, SFMono-Regular, Consolas, "Noto Sans JP", monospace;
-      white-space: pre-wrap;
-      font-size: 0.9rem;
-      line-height: 1.6;
+      background: var(--bg-light);
+      border-left: 4px solid var(--primary-color);
+      padding: 1.2rem;
+      margin: 1.2rem 0;
+      font-family: ui-monospace, SFMono-Regular, Consolas, monospace;
+      font-size: 1rem;
+      overflow-x: auto;
     }
 
-    .img-box {
-      margin-top: 1rem;
-      text-align: center;
+    /* Image Layouts */
+    .img-box { margin: 2.5rem 0; text-align: center; }
+    .dual-images {
+      display: flex;
+      justify-content: center;
+      gap: 1.5rem;
+      flex-wrap: wrap;
+      margin-bottom: 0.8rem;
     }
-    .img-box img {
-      max-width: 100%;
+    .dual-images img {
+      flex: 1 1 calc(45% - 1rem);
+      max-width: 480px;
+      height: auto;
       border-radius: 8px;
-      box-shadow: 0 1px 6px rgba(0,0,0,0.15);
+      box-shadow: 0 4px 12px rgba(0,0,0,0.1);
     }
-    .img-caption {
+    .single-img {
+      max-width: 800px;
+      width: 100%;
+      height: auto;
+      border-radius: 8px;
+      box-shadow: 0 4px 12px rgba(0,0,0,0.1);
+    }
+    .img-caption { font-size: 0.85rem; color: #666; margin-top: 0.8rem; font-style: italic; }
+
+    /* Table */
+    .results-table {
+      width: 100%;
+      border-collapse: collapse;
+      margin: 1.5rem 0;
       font-size: 0.9rem;
-      color: #555;
-      margin-top: 0.3rem;
     }
-    section h3 { margin-top: 1.5rem; }
+    .results-table th, .results-table td { border: 1px solid #ddd; padding: 0.75rem; text-align: center; }
+    .results-table th { background: var(--bg-light); font-weight: 600; }
+    .highlight-cell { font-weight: 600; color: #d32f2f; background: #fff5f5; }
+
+    @media (max-width: 600px) {
+      .dual-images img { flex: 1 1 100%; max-width: 100%; }
+    }
+
+    footer { text-align: center; padding: 2rem; color: #777; font-size: 0.9rem; border-top: 1px solid #eee; }
   </style>
 </head>
 
@@ -58,145 +110,145 @@
 
   <section class="hero">
     <h1><span class="highlight">Research Overview</span></h1>
-    <p>Causal Discovery via Continuous Optimization and Coordinate Descent</p>
+    <p>DAG-Constrained Coordinate Descent for Causal Discovery</p>
   </section>
 
-  <!-- ======= English Section ======= -->
   <section id="en" class="lang-section active">
-    <h2>Keywords</h2>
-    <div class="card">
-      Causal Inference, Causal Discovery, Continuous Optimization, Graph Structure Learning, Sparse Modeling
-    </div>
-
     <h2>Research Background</h2>
     <div class="card">
-      Traditional statistical analysis and machine learning primarily focus on revealing <em>correlations</em> among variables. However, for understanding complex socio-economic or biological phenomena, as well as for policy design and decision-making support, it is essential to identify the <em>causal relationships</em> underlying the data.<br><br>
-      Within this context, <strong>causal inference</strong> aims to estimate intervention and counterfactual effects, while <strong>causal discovery</strong> seeks to estimate causal structures (directed acyclic graphs; DAGs) directly from observational data.<br><br>
-      Recently, approaches that formulate causal discovery as a <strong>continuous optimization problem</strong>—notably exemplified by NOTEARS—have attracted much attention. These methods relax the combinatorial search of DAGs into a differentiable optimization framework. However, most existing approaches employ an L₁-norm penalty to promote sparsity, which has been shown to <strong>lack consistency over the Markov equivalence class</strong> of the true graph. Conversely, the L₀-norm penalty offers theoretical consistency but is non-continuous and thus difficult to optimize via gradient-based methods.
-    </div>
-
-    <h2>Research Objective</h2>
-    <div class="card">
-      The goal of this study is to overcome the above theoretical and computational limitations by developing a <strong>new causal discovery algorithm that guarantees consistency and scalability to high-dimensional data</strong>, while maintaining high computational efficiency and accuracy.<br><br>
-      Specifically, the research explores two complementary approaches:
-      <ol>
-        <li><strong>A continuous optimization approach</strong> using a <em>Gumbel-Softmax relaxation</em> of the L₀-norm to enable smooth and differentiable optimization while preserving theoretical consistency.</li>
-        <li><strong>A coordinate descent–based approach</strong>, which explicitly enforces acyclicity and sparsity through iterative edge-wise updates under DAG constraints.</li>
-      </ol>
-    </div>
-
-    <h2>Research Content</h2>
-    <div class="card">
-      <h3>1. Gumbel-Softmax SGD Approach</h3>
-      In this approach, the existence of each edge is parameterized via a <strong>Gumbel-Softmax gate</strong>, where the temperature parameter τ is gradually annealed to transition from continuous probabilities to discrete graph structures.<br><br>
-      The loss function is defined as:
-      <div class="math">
-\[
-\mathcal{L}(B)
-= -2 \log\det(B+\delta I)
-+ \operatorname{tr}(B^\top \hat{R} B)
-+ \lambda \sum_{i\neq j} g_{ij}
-\]
-      </div>
-      where the first term enforces stability (invertibility), the second ensures data fitting, and the third promotes sparsity.<br>
-      Model parameters (U, P) are updated using <strong>stochastic gradient descent (SGD)</strong> with momentum, and after convergence, binarization and cycle removal yield the final acyclic structure.<br><br>
-      This approach effectively bridges L₀-like sparsity and continuous differentiability, allowing efficient structure learning through gradient-based optimization.
+      <p>Traditional statistical analysis and machine learning primarily focus on revealing <strong>correlations</strong> among variables. However, for understanding complex socio-economic or biological phenomena, as well as for policy design and decision-making support, it is essential to identify the <strong>causal relationships</strong> underlying the data.</p>
+      
+      <p>Within this context, <strong>causal inference</strong> aims to estimate intervention and counterfactual effects, while <strong>causal discovery</strong> seeks to estimate causal structures (directed acyclic graphs; DAGs) directly from observational data.</p>
+      
+      <p>Recently, approaches that formulate causal discovery as a <strong>continuous optimization problem</strong>—notably exemplified by NOTEARS—have attracted much attention. These methods relax the combinatorial search of DAGs into a differentiable optimization framework. However, most existing approaches employ an \(L_1\)-norm penalty to promote sparsity, which has been shown to <strong>lack consistency over the Markov equivalence class</strong> of the true graph. Conversely, the \(L_0\)-norm penalty offers theoretical consistency but is non-continuous and thus difficult to optimize via gradient-based methods.</p>
+      
       <div class="img-box">
-        <img src="gumbel.png" alt="Gumbel-Softmax SGD Approach Illustration">
-        <div class="img-caption">Figure 1. Conceptual diagram of Gumbel-Softmax SGD-based causal discovery.</div>
-      </div>
-
-      <h3>2. Coordinate Descent Approach</h3>
-      As a complementary direction, this study also develops a <strong>coordinate descent–based causal discovery algorithm</strong>.<br><br>
-      At each iteration, an edge (i, j) is selected, and if the updated matrix A + δE<sub>ij</sub> satisfies the DAG constraint, the optimal update
-      <div class="math">
-\[
-\delta^* = \arg\min_\delta f(A + \delta E_{ij})
-\]
-      </div>
-      is computed analytically.<br>
-      This localized update strategy preserves acyclicity and sparsity during optimization and naturally stabilizes the graph structure.<br><br>
-      By incorporating L₀-type regularization and adaptive thresholding, the method achieves consistent structure recovery under explicit graph constraints—offering a contrast to the probabilistic relaxation in the Gumbel-Softmax framework.<br><br>
-      Through comparative analysis of these two approaches, the research aims to establish a <strong>unified optimization framework</strong> that balances theoretical consistency, computational efficiency, and sparsity for large-scale causal discovery.
-      <div class="img-box">
-        <img src="coordinate.png" alt="Coordinate Descent Approach Illustration">
-        <div class="img-caption">Figure 2. Iterative update process in Coordinate Descent-based causal discovery.</div>
+        <div class="dual-images">
+          <img src="dag1.png" alt="Basic DAG Structure">
+          <img src="dag2.png" alt="Complex Causal Network">
+        </div>
+        <div class="img-caption">Figure 1. Examples of Directed Acyclic Graphs (DAGs) representing underlying causal mechanisms.</div>
       </div>
     </div>
 
-    <h2>Implementation and Tools</h2>
+    <h2>Core Methodology</h2>
     <div class="card">
-      Python, PyTorch, NumPy, SciPy, NetworkX, Matplotlib<br>
-      (Experimental setup includes GPU-based computation, PyTorch automatic differentiation, and NetworkX for DAG verification.)
+      <h3>1. Model Assumptions & A-formulation</h3>
+      We consider a linear Structural Equation Model (SEM) with independent noise:
+      <div class="math">$$X = B^T X + \varepsilon, \quad \varepsilon \sim \mathcal{N}(0, \Omega)$$</div>
+      where $B$ is the weighted adjacency matrix and $\Omega$ is a diagonal noise covariance matrix. We introduce the transformation:
+      <div class="math">$$A := (I - B)\Omega^{-1/2}$$</div>
+      Under this A-formulation, the log-likelihood optimization is converted into finding a sparse, invertible matrix $A$ that respects the DAG constraint.
+    </div>
+
+    <div class="card">
+      <h3>2. Coordinate Descent Algorithm</h3>
+      <p>Our method optimizes the structure by updating one coordinate (edge) at a time. Unlike gradient-based methods that move along the steepest descent in continuous space, Coordinate Descent (CD) explores the discrete structure space by making <strong>locally optimal, discrete moves</strong> that are guaranteed to stay within the DAG manifold.</p>
+      
+      <p>In each <strong>Epoch</strong>, the algorithm performs a random permutation of all unordered node pairs $\{i, j\}$. For each pair, we evaluate two potential directed edges ($i \to j$ and $j \to i$). The update is only accepted if it satisfies the acyclicity constraint and provides a larger objective decrease than the alternative direction.</p>
+
+      <div class="img-box">
+        <img src="coordinate.png" alt="CD Search Space" class="single-img" style="max-width: 500px;">
+        <div class="img-caption">Figure 2. Conceptual visualization of the Coordinate Descent search process on the DAG manifold.</div>
+      </div>
+
+      <h4>Epoch-based Traversal Strategy</h4>
+      <p>By iterating through epochs and diagonal updates, the algorithm ensures that every potential causal link is revisited under the context of the currently estimated graph. This iterative refinement allows the model to escape local minima that often trap naive greedy search algorithms.</p>
+
+      <div class="img-box">
+        <img src="epoch.png" alt="Epoch-based CD Flow" class="single-img" style="max-width: 500px;">
+        <div class="img-caption">Figure 3. Logic flow of the Epoch-based Coordinate Descent (A-formulation).</div>
+      </div>
+
+      <h4>Analytical Closed-Form Solution</h4>
+      Fixing all other entries, the optimal update $\delta^*$ is computed analytically:
+      <div class="math">
+        $$\delta^* = \frac{2(b - \alpha)}{-(c + \alpha b) - \sqrt{(c - \alpha b)^2 + 4\alpha^2 c}}$$
+      </div>
+      where $c = S_{ii}$, $b = (SA)_{ij}$, and $\alpha = (A^{-1})_{ji}$. This ensures each step is <strong>computationally exact</strong> and numerically stable, avoiding the need for expensive line-search or inner-loop iterations.
+    </div>
+
+    <h2>Experimental Results</h2>
+    <div class="card">
+      <table class="results-table">
+        <thead>
+          <tr>
+            <th>Index</th><th>CD (Ours)</th><th>CD_L0 (Ours)</th><th>GOLEM_EV</th><th>GOLEM_NV</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr><td>1</td><td class="highlight-cell">0.79</td><td>0.78</td><td>0.60</td><td>0.50</td></tr>
+          <tr><td>2</td><td class="highlight-cell">0.81</td><td>0.64</td><td>0.56</td><td>0.57</td></tr>
+          <tr><td>3</td><td class="highlight-cell">1.00</td><td>0.88</td><td>1.00</td><td>1.00</td></tr>
+          <tr><td>4</td><td class="highlight-cell">0.74</td><td>0.38</td><td>0.02</td><td>0.20</td></tr>
+          <tr><td>5</td><td class="highlight-cell">0.61</td><td>0.45</td><td>0.01</td><td>0.03</td></tr>
+          <tr><td>6</td><td class="highlight-cell">0.84</td><td>0.84</td><td>0.35</td><td>0.23</td></tr>
+          <tr><td>7</td><td class="highlight-cell">0.52</td><td>0.36</td><td>0.00</td><td>0.00</td></tr>
+          <tr><td>8</td><td class="highlight-cell">0.81</td><td>0.56</td><td>0.06</td><td>0.00</td></tr>
+          <tr><td>9</td><td>0.60</td><td class="highlight-cell">0.68</td><td>0.08</td><td>0.00</td></tr>
+        </tbody>
+      </table>
+      <p>The <strong>CD</strong> method shows superior performance in recovering true causal links, particularly in high-sparsity scenarios where GOLEM struggles with soft acyclicity penalties.</p>
+    </div>
+
+    <h2>Application Example</h2>
+    <div class="card">
+      <p>The proposed method can be applied to various domains requiring causal structure discovery from observational data, including economics, biology, and social sciences.</p>
+      
+      <div class="img-box">
+        <img src="application.png" alt="Application Example" class="single-img" style="max-width: 500px;">
+        <div class="img-caption">Figure 4. Example application of causal discovery in real-world scenarios.</div>
+      </div>
     </div>
   </section>
 
-  <!-- ======= Japanese Section ======= -->
-  <section id="ja" class="lang-section jp">
-    <h2>キーワード</h2>
-    <div class="card">因果推論、因果探索、連続最適化、グラフ構造学習、スパースモデリング</div>
-
+  <section id="ja" class="lang-section">
     <h2>研究背景</h2>
     <div class="card">
-      従来の統計解析や機械学習は変数間の「相関関係」を明らかにすることに重点を置いてきたが、複雑な社会・経済・生物学的現象の理解、政策立案、意思決定支援においては、変数間の「因果関係」を明確に把握することが不可欠である。<br><br>
-      この文脈において、<strong>因果推論</strong>は介入効果や反事実の推定を行う一方で、<strong>因果探索</strong>は観測データのみから因果構造（有向非巡回グラフ：DAG）を推定することを目的とする。<br><br>
-      近年、因果探索を<strong>連続最適化問題</strong>として定式化し、勾配に基づく最適化で解く手法（例：NOTEARS）が注目されている。しかし、多くの既存手法ではスパース性を誘導するためにL₁ノルムが用いられており、これは真の因果グラフの<strong>マルコフ同値類上で一貫性を持たない</strong>ことが指摘されている。一方でL₀ノルムは理論的一貫性を保証するものの、非連続であるために勾配最適化が困難であるという課題が残る。
-    </div>
+      <p>従来の統計解析や機械学習は、主に変数間の<strong>「相関関係」</strong>を捉えることに重点を置いてきました。しかし、複雑な社会経済現象の理解や意思決定支援においては、データに潜む<strong>「因果関係」</strong>を特定することが不可欠です。本研究では、観測データから因果構造（DAG）を直接推定する「因果探索」に焦点を当てます。</p>
+      
+      <p>近年、NOTEARSに代表される<strong>連続最適化</strong>による因果探索が注目されていますが、既存手法の多くは$L_1$ノルムペナルティによるバイアスや、マルコフ同値類上での一貫性の欠如という課題を抱えています。本研究では、$L_0$型スパース性を維持しつつ、厳密なDAG制約下で最適化を行う新しい座標降下法を提案します。</p>
 
-    <h2>研究目的</h2>
-    <div class="card">
-      本研究の目的は、上記の理論的・計算的課題を克服し、<strong>高次元データに対しても一貫性保証と計算効率を両立する新しい因果探索アルゴリズム</strong>を開発することである。<br><br>
-      特に、L₀ノルムを<strong>Gumbel-Softmax</strong>などの連続近似で滑らかに緩和し、確率的ゲーティングを通じてスパース構造を学習する一方、別のアプローチとして<strong>座標降下法（Coordinate Descent）</strong>を用いた逐次最適化により、グラフの疎性と非巡回制約を直接的に満たすアルゴリズムを検討している。
-    </div>
-
-    <h2>研究内容</h2>
-    <div class="card">
-      <h3>1. Gumbel-Softmax SGD アプローチ</h3>
-      本手法では、各辺の存在確率を<strong>Gumbel-Softmax分布</strong>でパラメータ化し、温度パラメータ τ を段階的に減少させることで、連続的な確率表現から離散的な因果構造へと収束させる。<br><br>
-      損失関数は以下で定義される：
-      <div class="math">
-\[
-\mathcal{L}(B)
-= -2 \log\det(B+\delta I)
-+ \operatorname{tr}(B^\top \hat{R} B)
-+ \lambda \sum_{i\neq j} g_{ij}
-\]
-      </div>
-      第一項は可逆性・安定性、第二項はデータ適合度、第三項はスパース性を表す。<br><br>
-      パラメータ $(U,P)$ をSGDで更新し、学習後にしきい値処理とサイクル除去を行うことで、最終的な<strong>非巡回グラフ構造</strong>を得る。<br><br>
-      本アプローチは連続最適化に基づきつつ、確率的離散化を導入することで、L₀ノルムに近いスパース性と滑らかな勾配更新を両立する特徴を持つ。
       <div class="img-box">
-        <img src="gumbel.png" alt="Gumbel-Softmax SGD アプローチ 図">
-        <div class="img-caption">図1. Gumbel-Softmax SGDによる因果探索の概念図。</div>
-      </div>
-
-      <h3>2. Coordinate Descent アプローチ</h3>
-      一方、もう一つの方向性として<strong>座標降下法に基づく因果探索</strong>を開発している。<br><br>
-      この手法では、各エッジ $(i,j)$ を逐次的に選択し、更新後の行列 $A+\delta E_{ij}$ がDAG制約を満たす場合に限り、
-      <div class="math">
-\[
-\delta^* = \arg\min_\delta f(A + \delta E_{ij})
-\]
-      </div>
-      を解析的に求めて関数値を改善する。<br><br>
-      各更新は局所的だが、<strong>非巡回制約を逐次確認しつつ</strong>最適化が進むため、グラフ構造のスパース性と安定性を自然に維持できる。<br><br>
-      また、L₀型ペナルティの導入や閾値調整を組み合わせることで、Gumbel-Softmax SGDとは異なる形で一貫性を確保しつつ、より明示的な構造制約下での最適化を可能にしている。<br><br>
-      これら二つのアプローチの比較を通じ、連続最適化と組合せ最適化の橋渡しを行い、理論的一貫性・計算効率・スパース性のバランスを最適化する新しい枠組みの確立を目指している。
-      <div class="img-box">
-        <img src="coordinate.png" alt="Coordinate Descent アプローチ 図">
-        <div class="img-caption">図2. 座標降下法に基づく因果探索アルゴリズムの反復更新プロセス。</div>
+        <div class="dual-images">
+          <img src="dag1.png" alt="DAG構造例1">
+          <img src="dag2.png" alt="DAG構造例2">
+        </div>
+        <div class="img-caption">図1. 因果メカニズムを表現する有向非巡回グラフ（DAG）の例。</div>
       </div>
     </div>
 
-    <h2>実装言語・使用ツール等</h2>
+    <h2>研究内容：アルゴリズムの詳細</h2>
     <div class="card">
-      Python、PyTorch、NumPy、SciPy、NetworkX、Matplotlib<br>
-      （実験環境：GPU 搭載計算機、PyTorch による自動微分・勾配更新、NetworkX によるDAG 判定）
+      <h3>座標降下法（Coordinate Descent）の戦略</h3>
+      <p>提案アルゴリズムは、全変数を同時に更新するのではなく、各エッジを逐次的に更新します。各エッジの更新は、他のエッジの状態を固定した上での一次元最適化問題として解かれます。</p>
+      
+      <p><strong>エポックベースの更新：</strong> 毎エポックごとにノード対の順序をランダムに入れ替え（Permutation）、因果方向の有無と向きを判定します。これにより、局所解に陥るリスクを低減し、より真の構造に近いグラフへと収束させることが可能になります。</p>
+
+      <div class="img-box">
+        <img src="epoch.png" alt="アルゴリズムフロー" class="single-img" style="max-width: 500px;">
+        <div class="img-caption">図3. エポックベース座標降下法の処理フロー（A定式化）。</div>
+      </div>
+    </div>
+
+    <h2>実験結果</h2>
+    <div class="card">
+      <p>提案手法は、特にスパース性が高いデータセットにおいて、既存のGOLEM等の手法を大きく上回る復元精度を達成しました。座標降下法による離散的な探索が、連続最適化におけるバイアスを効果的に回避していることが示唆されます。</p>
+    </div>
+
+    <h2>応用例</h2>
+    <div class="card">
+      <p>提案手法は、観測データから因果構造を発見する必要がある様々な領域に適用可能です。経済学、生物学、社会科学などの分野で、真の因果メカニズムを明らかにすることができます。</p>
+      
+      <div class="img-box">
+        <img src="application.png" alt="応用例" class="single-img" style="max-width: 500px;">
+        <div class="img-caption">図4. 実世界のシナリオにおける因果探索の応用例。</div>
+      </div>
     </div>
   </section>
 
   <footer>
-    © 2025 Hanyang Yin — University of Tokyo
+    © 2026 Hanyang Yin — The University of Tokyo
   </footer>
 
   <script>
@@ -210,6 +262,5 @@
       btn.textContent = isEN ? 'English' : '日本語';
     });
   </script>
-</bod
-
-
+</body>
+</html>

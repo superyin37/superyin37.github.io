@@ -257,3 +257,36 @@ PDF Return
 - 企业级部署优化
 
 ---
+
+```mermaid
+flowchart TD
+
+    User --> Frontend
+    Frontend --> API
+
+    API --> RAG
+    API --> Planning
+    API --> Image
+
+    RAG --> VectorDB
+    Planning --> CaseDB
+    Planning --> MapAPI
+    Image --> NanoBana
+
+    API --> CAD
+    CAD --> CodeDB
+
+    subgraph "Core Engines"
+        RAG["RAG Engine"]
+        Planning["Planning Engine"]
+        Image["Image Generation Engine"]
+    end
+
+    subgraph "Data Layer"
+        VectorDB[(Vector DB)]
+        CaseDB[(Case Database)]
+        CodeDB[(Code PDF DB)]
+        MapAPI[(Map API)]
+        NanoBana[(Image API)]
+    end
+```
