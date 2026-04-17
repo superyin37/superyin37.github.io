@@ -94,6 +94,7 @@
   .mermaid {
     display: inline-block;
     text-align: left;
+    min-width: 700px;
   }
   hr {
     border: none;
@@ -424,6 +425,6 @@ flowchart LR
   <li>Embedding 層をファクトリ化し、今後は KB ごとに embedder を切り替えやすくする</li>
 </ul>
 
-<script>mermaid.initialize({ startOnLoad: true, theme: 'default', flowchart: { useMaxWidth: true, htmlLabels: true } });</script>
+<script>mermaid.initialize({ startOnLoad: true, theme: 'default', flowchart: { useMaxWidth: false, htmlLabels: true } });</script>
 </body>
 </html>
