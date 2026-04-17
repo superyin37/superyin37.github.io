@@ -80,6 +80,8 @@ Final Answer
 - ベクトル検索および文書再ランキング
 - ハルシネーション抑制設計
 
+📄 [RAGモジュール詳細ドキュメント](rag/RAG-intro-ja.html)
+
 ---
 
 ## 🔹 機能モジュール2：建築企画案生成システム（PPT Generator）
@@ -118,6 +120,8 @@ Final Answer
 - ページ単位Prompt設計
 - ロールベース設計
 - 制約付き出力テンプレート
+
+📄 [PPTモジュール詳細ドキュメント](ppt/PRESENTATION_ja.html)
 
 ---
 

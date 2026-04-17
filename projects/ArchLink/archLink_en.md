@@ -80,6 +80,8 @@ Final Answer
 - Vector-based retrieval and document re-ranking
 - Hallucination mitigation mechanisms
 
+📄 [Detailed RAG Module Documentation](rag/RAG-intro-ja.html)
+
 ---
 
 ## 🔹 Module 2: Architectural Planning Proposal Generator (PPT Generator)
@@ -118,6 +120,8 @@ Core Concept: **Interactive Guidance + Case-Based Reference + Intelligent Genera
 - Page-level prompting
 - Role-based prompting
 - Constraint-based output templates
+
+📄 [Detailed PPT Module Documentation](ppt/PRESENTATION_ja.html)
 
 ---
 
